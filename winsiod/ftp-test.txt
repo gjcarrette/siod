@@ -1,0 +1,66 @@
+
+
+
+FTP-TEST(1C)         Communication Commands          FTP-TEST(1C)
+
+
+
+NAME
+     ftp-test - connect to an ftp server multiple times.
+
+SYNOPSIS
+     ftp-test    <hostname>    [:connections=N]     [:wait=pause]
+     [:username=anonymous]              [:password=user@hostname]
+     [:debug=false]
+
+DESCRIPTION
+     ftp-test opens multiple connections to the ftp server,  log-
+     ging in with the username and password specified. Then waits
+     a given number of seconds, or prompts for and reads  a  line
+     of user input if wait=pause.
+
+
+EXIT STATUS
+     connection errors result in a non-zero exit status.
+
+
+AUTHOR
+     gjc@world.std.com
+
+
+SEE ALSO
+     siod ftp-cp http://people.delphi.com/gjc/siod.html
+
+
+FILES
+     /usr/local/bin/ftp-test                  /usr/local/bin/siod
+     /usr/local/lib/libsiod.so          /usr/local/lib/siod/ss.so
+     /usr/local/lib/siod/ftp.scm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SunOS 5.5              Last change: LOCAL                       1
+
+
+

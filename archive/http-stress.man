@@ -1,0 +1,61 @@
+.TH HTTP-STRESS 1C LOCAL 
+.SH NAME
+http-stress \- simple http parallel client for http server stress measurements.
+.SH SYNOPSIS
+.B http-stress
+[:verify=true] [:port=80] [:forks=5] [:cycles=5] [:sleep=0] [host] [url1] [url2] [...]
+.SH DESCRIPTION
+.I http-stress
+is a simple http command-client which fetches randomly selected urls
+from the host specified. The program creates parallel client forks
+where each client cycles through the specified number of times.
+.RE
+.SS COMMAND LINE OPTIONS
+.TP 8
+.BI :verify=XXXXX
+The
+.I XXXXX
+is true or false. If true then the urls are first fetched one by one
+in order with the http result headers displayed to the standard output.
+.TP
+.BI :port=XXXX
+The 
+.I XXXXX
+can be any legal port number, default 80.
+.TP
+.BI :cycles=XXXXX
+The
+.I XXXXXX
+number of hits for each client fork, default 5.
+.TP
+.BI :forks=XXXXX
+The
+.I XXXXX
+number of client forks running in parallel, default 5.
+.TP
+.BI :sleep=X
+The number of seconds
+.I X
+to sleep after sending the http request and before reading the response.
+Defaults to 0.
+.TP
+.BI host
+The 
+.I host
+defaults to localhost.
+.TP
+.BI url
+The 
+.I url
+defaults to /. Multiple urls may be specified.
+.PD
+.SH FILES
+http-stress http-stress.scm
+.PD
+.SH IDENTIFICATION
+author: George J. Carrette
+.PD
+.SH SEE ALSO
+siod http://people.delphi.com/gjc/siod.html
+
+

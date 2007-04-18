@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<?define bindir = "release\"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+<!-- Good MSI practice would have each EXE/DLL in its own component,
+     for proper patching behavior. But right now I want to get the job
+     done with as little typing as possible. So the components are
+     really being used as sets of files that can be installed.
+ -->
+ <Product Id="9EE692BF-6BAC-47FB-9D36-37DC4E997A0B" 
+          Name="SIOD" 
+          Language="1033" 
+          Version="3.6.0.0" 
+          Manufacturer="George J. Carrette">
+  <Package Id="4ECAEE6C-DD8A-4364-A13D-32AAB4D78857"
+           Description="SIOD, a Scheme Intepreter in one Day"
+           Comments="SIOD"
+           Manufacturer="George J. Carrette" 
+           InstallerVersion="200" 
+           Compressed="yes" />
+  <Property Id="ARPURLINFOABOUT" Value="http://alum.mit.edu/www/gjc/siod.html" />
+  <Property Id="ARPURLUPDATEINFO" Value="http://www.codeplex.com/siod" />
+  <Icon Id="siodicon.exe" SourceFile="bitmaps\siod.ico"/> 
+  <Property Id="ARPPRODUCTICON" Value="siodicon.exe" />
+  <Property Id="ALLUSERS" Value="1"/>
+
+  <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
+  <Directory Id="TARGETDIR" Name="SourceDir">
+   <Directory Id="StartMenuFolder" Name="StrtFldr">
+    <Directory Id="ProgramMenuFolder" Name="PrgFldr">
+     <Directory Id="SIODProgramsFolder" Name="SIOD"/>
+    </Directory>
+   </Directory>
+
+   <Directory Id="ProgramFilesFolder" Name="PFiles">
+    <Directory Id="SIODDIR" Name="SIOD">
+     <Component Id="SIODexeruntime" Guid="822B0E94-B451-456E-A01F-E92A74E3E663">
+      <Registry Id="SIOD_LIB" Root="HKLM" Key="SOFTWARE\George Carrette\SIOD" Name="SIOD_LIB"
+                Type="string" Value="[SIODDIR]" />
+      <File Id="license.rtf" Name="license.rtf" LongName="license.rtf" DiskId="1" Source="license.rtf" />
+      <File Id="libsiod.dll" Name="libsiod.dll" LongName="libsiod.dll" DiskId="1" Source="$(var.bindir)libsiod.dll" />
+      <File Id="parser_pratt.dll" Name="parserp.dll" LongName="parser_pratt.dll" DiskId="1" Source="$(var.bindir)parser_pratt.dll" />
+      <File Id="regex.dll" Name="regex.dll" LongName="regex.dll" DiskId="1" Source="$(var.bindir)regex.dll" />
+      <File Id="siod.exe" Name="siod.exe" LongName="siod.exe" DiskId="1" Source="$(var.bindir)siod.exe" />
+      <File Id="slibw32.dll" Name="slibw32.dll" LongName="slibw32.dll" DiskId="1" Source="$(var.bindir)slibw32.dll" />
+      <File Id="ss.dll" Name="ss.dll" LongName="ss.dll" DiskId="1" Source="$(var.bindir)ss.dll" />
+      <File Id="tar.dll" Name="tar.dll" LongName="tar.dll" DiskId="1" Source="$(var.bindir)tar.dll" />
+      <File Id="wcsiod.exe" Name="wcsiod.exe" LongName="wcsiod.exe" DiskId="1" Source="$(var.bindir)wcsiod.exe" />
+      <File Id="wmsiod.exe" Name="wmsiod.exe" LongName="wmsiod.exe" DiskId="1" Source="$(var.bindir)wmsiod.exe" />
+
+      <File Id="ftp_cp.exe" Name="ftp-cp.exe" LongName="ftp-cp.exe" DiskId="1" Source="$(var.bindir)ftp-cp.exe" />
+      <File Id="ftp_get.exe" Name="ftp-get.exe" LongName="ftp-get.exe" DiskId="1" Source="$(var.bindir)ftp-get.exe" />
+      <File Id="ftp_put.exe" Name="ftp-put.exe" LongName="ftp-put.exe" DiskId="1" Source="$(var.bindir)ftp-put.exe" />
+      <File Id="ftp_test.exe" Name="ftp-test.exe" LongName="ftp-test.exe" DiskId="1" Source="$(var.bindir)ftp-test.exe" />
+      <File Id="http_get.exe" Name="http-get.exe" LongName="http-get.exe" DiskId="1" Source="$(var.bindir)http-get.exe" />
+      <File Id="http_stress.exe" Name="httpstre.exe" LongName="http-stress.exe" DiskId="1" Source="$(var.bindir)http-stress.exe" />
+      <File Id="proxy_server.exe" Name="proxysrv.exe" LongName="proxy-server.exe" DiskId="1" Source="$(var.bindir)proxy-server.exe" />
+      <File Id="snapshot_compare.exe" Name="snapcmp.exe" LongName="snapshot-compare.exe" DiskId="1" Source="$(var.bindir)snapshot-compare.exe" />
+      <File Id="snapshot_dir.exe" Name="snapdir.exe" LongName="snapshot-dir.exe" DiskId="1" Source="$(var.bindir)snapshot-dir.exe" />
+
+
+     </Component>
+     <Component Id="SIODdocumentation" Guid="3B5541F9-C9B7-4E57-BA87-B19CDD2EA9DB">
+      <File Id="README.txt" Name="README.txt" LongName="README.txt" DiskId="1" Source="README.txt" />
+      <File Id="csiod.txt" Name="csiod.txt" LongName="csiod.txt" DiskId="1" Source="csiod.txt" />
+      <File Id="ftp_cp.txt" Name="ftp-cp.txt" LongName="ftp-cp.txt" DiskId="1" Source="ftp-cp.txt" />
+      <File Id="ftp_get.txt" Name="ftp-get.txt" LongName="ftp-get.txt" DiskId="1" Source="ftp-get.txt" />
+      <File Id="ftp_put.txt" Name="ftp-put.txt" LongName="ftp-put.txt" DiskId="1" Source="ftp-put.txt" />
+      <File Id="ftp_test.txt" Name="ftp-test.txt" LongName="ftp-test.txt" DiskId="1" Source="ftp-test.txt" />
+      <File Id="http_get.txt" Name="http-get.txt" LongName="http-get.txt" DiskId="1" Source="http-get.txt" />
+      <File Id="http_stress.txt" Name="httpstrs.txt" LongName="http-stress.txt" DiskId="1" Source="http-stress.txt" />
+      <File Id="proxy_server.txt" Name="proxysrv.txt" LongName="proxy-server.txt" DiskId="1" Source="proxy-server.txt" />
+      <File Id="siod.txt" Name="siod.txt" LongName="siod.txt" DiskId="1" Source="siod.txt" />
+      <File Id="snapshot_compare.txt" Name="snapshtc.txt" LongName="snapshot-compare.txt" DiskId="1" Source="snapshot-compare.txt" />
+      <File Id="snapshot_dir.txt" Name="snapshtd.txt" LongName="snapshot-dir.txt" DiskId="1" Source="snapshot-dir.txt" />
+      <File Id="siod.html" Name="siod.htm" LongName="siod.html" DiskId="1" Source="siod.html" />
+      <File Id="siod_regex.html" Name="siod_rgx.htm" LongName="siod_regex.html" DiskId="1" Source="siod_regex.html" />
+      <File Id="winsiod.html" Name="winsiod.htm" LongName="winsiod.html" DiskId="1" Source="winsiod.html" />
+     </Component>
+     <Component Id="SIODcompiler" Guid="01ED0707-2DE0-4A08-83CF-21C7AB3C9784">
+      <File Id="csiod.exe" Name="csiod.exe" LongName="csiod.exe" DiskId="1" Source="$(var.bindir)csiod.exe"/>
+      <File Id="cgi_echo.scm" Name="cgiecho.scm" LongName="cgi-echo.scm" DiskId="1" Source="cgi-echo.scm" />
+      <File Id="cgi.scm" Name="cgi.scm" LongName="cgi.scm" DiskId="1" Source="cgi.scm" />
+      <File Id="csiod.smd" Name="csiod.smd" LongName="csiod.smd" DiskId="1" Source="csiod.smd" />
+      <File Id="find_files.scm" Name="findfls.scm" LongName="find-files.scm" DiskId="1" Source="find-files.scm" />
+      <File Id="fixcrlf.smd" Name="fixcrlf.smd" LongName="fixcrlf.smd" DiskId="1" Source="fixcrlf.smd" />
+      <File Id="ftp_cp.smd" Name="ftp-cp.smd" LongName="ftp-cp.smd" DiskId="1" Source="ftp-cp.smd" />
+      <File Id="ftp_get.smd" Name="ftp-get.smd" LongName="ftp-get.smd" DiskId="1" Source="ftp-get.smd" />
+      <File Id="ftp_put.smd" Name="ftp-put.smd" LongName="ftp-put.smd" DiskId="1" Source="ftp-put.smd" />
+      <File Id="ftp_test.smd" Name="ftp-test.smd" LongName="ftp-test.smd" DiskId="1" Source="ftp-test.smd" />
+      <File Id="ftp.scm" Name="ftp.scm" LongName="ftp.scm" DiskId="1" Source="ftp.scm" />
+      <File Id="hello.scm" Name="hello.scm" LongName="hello.scm" DiskId="1" Source="hello.scm" />
+      <File Id="http_get.smd" Name="http-get.smd" LongName="http-get.smd" DiskId="1" Source="http-get.smd" />
+      <File Id="http_server.scm" Name="httpsrvr.scm" LongName="http-server.scm" DiskId="1" Source="http-server.scm" />
+      <File Id="http_stress.scm" Name="httpss.scm" LongName="http-stress.scm" DiskId="1" Source="http-stress.scm" />
+      <File Id="http_stress.smd" Name="httpss.smd" LongName="http-stress.smd" DiskId="1" Source="http-stress.smd" />
+      <File Id="http.scm" Name="http.scm" LongName="http.scm" DiskId="1" Source="http.scm" />
+      <File Id="maze_support.scm" Name="maze-sup.scm" LongName="maze-support.scm" DiskId="1" Source="maze-support.scm" />
+      <File Id="parser_pratt.scm" Name="parserp.scm" LongName="parser_pratt.scm" DiskId="1" Source="parser_pratt.scm" />
+      <File Id="piechart.scm" Name="piechart.scm" LongName="piechart.scm" DiskId="1" Source="piechart.scm" />
+      <File Id="pop3.scm" Name="pop3.scm" LongName="pop3.scm" DiskId="1" Source="pop3.scm" />
+      <File Id="pratt.scm" Name="pratt.scm" LongName="pratt.scm" DiskId="1" Source="pratt.scm" />
+      <File Id="selfdoc.scm" Name="selfdoc.scm" LongName="selfdoc.scm" DiskId="1" Source="selfdoc.scm" />
+      <File Id="smtp.scm" Name="smtp.scm" LongName="smtp.scm" DiskId="1" Source="smtp.scm" />
+      <File Id="snapshot_compare.smd" Name="snapshtc.smd" LongName="snapshot-compare.smd" DiskId="1" Source="snapshot-compare.smd" />
+      <File Id="snapshot_dir.smd" Name="snapshtd.smd" LongName="snapshot-dir.smd" DiskId="1" Source="snapshot-dir.smd" />
+      <File Id="sql_msql.scm" Name="sql_msql.scm" LongName="sql_msql.scm" DiskId="1" Source="sql_msql.scm" />
+      <File Id="sql_oracle.scm" Name="sql_orcl.scm" LongName="sql_oracle.scm" DiskId="1" Source="sql_oracle.scm" />
+      <File Id="sql_rdb.scm" Name="sql_rdb.scm" LongName="sql_rdb.scm" DiskId="1" Source="sql_rdb.scm" />
+      <File Id="sql_sybase.scm" Name="sql_sybs.scm" LongName="sql_sybase.scm" DiskId="1" Source="sql_sybase.scm" />
+     </Component>
+     <Component Id="SIODcprogrammer" Guid="3EABF6D5-4D2A-4AD5-8FD7-265F5F5A45CD">
+      <File Id="siod.h" Name="siod.h" LongName="siod.h" DiskId="1" Source="siod.h" />
+      <File Id="siodp.h" Name="siodp.h" LongName="siodp.h" DiskId="1" Source="siodp.h" />
+      <File Id="ss.h" Name="ss.h" LongName="ss.h" DiskId="1" Source="ss.h" />
+      <File Id="libsiod_lib" Name="libsiod.lib" LongName="libsiod.lib" DiskId="1" Source="$(var.bindir)libsiod.lib" />
+     </Component>
+     <Component Id="SIODsourcecode" Guid="7E34558C-6E76-48F3-AA29-4216E562D3E7">
+      <File Id="cclass.h" Name="cclass.h" LongName="cclass.h" DiskId="1" Source="cclass.h" />
+      <File Id="cname.h" Name="cname.h" LongName="cname.h" DiskId="1" Source="cname.h" />
+      <File Id="md5.h" Name="md5.h" LongName="md5.h" DiskId="1" Source="md5.h" />
+      <File Id="regex.h" Name="regex.h" LongName="regex.h" DiskId="1" Source="regex.h" />
+      <File Id="regex2.h" Name="regex2.h" LongName="regex2.h" DiskId="1" Source="regex2.h" />
+      <File Id="utils.h" Name="utils.h" LongName="utils.h" DiskId="1" Source="utils.h" />
+      <File Id="SLIBW32.C" Name="SLIBW32.C" LongName="SLIBW32.C" DiskId="1" Source="SLIBW32.C" />
+      <File Id="build.bat" Name="build.bat" LongName="build.bat" DiskId="1" Source="build.bat" />
+      <File Id="dummy.vcproj" Name="dummy.vcp" LongName="dummy.vcproj" DiskId="1" Source="dummy.vcproj" />
+      <File Id="engine.c" Name="engine.c" LongName="engine.c" DiskId="1" Source="engine.c" />
+      <File Id="gd.c" Name="gd.c" LongName="gd.c" DiskId="1" Source="gd.c" />
+      <File Id="install.bat" Name="install.bat" LongName="install.bat" DiskId="1" Source="install.bat" />
+      <File Id="libsiod.def" Name="libsiod.def" LongName="libsiod.def" DiskId="1" Source="libsiod.def" />
+      <File Id="libsiod.vcproj" Name="libsiod.vcp" LongName="libsiod.vcproj" DiskId="1" Source="libsiod.vcproj" />
+      <File Id="md5.c" Name="md5.c" LongName="md5.c" DiskId="1" Source="md5.c" />
+      <File Id="ndbm.c" Name="ndbm.c" LongName="ndbm.c" DiskId="1" Source="ndbm.c" />
+      <File Id="parser_pratt.c" Name="parserp.c" LongName="parser_pratt.c" DiskId="1" Source="parser_pratt.c" />
+      <File Id="parser_pratt.def" Name="parserp.def" LongName="parser_pratt.def" DiskId="1" Source="parser_pratt.def" />
+      <File Id="parser_pratt.vcproj" Name="parserp.vcp" LongName="parser_pratt.vcproj" DiskId="1" Source="parser_pratt.vcproj" />
+      <File Id="proxy_server.smd" Name="proxysrv.smd" LongName="proxy-server.smd" DiskId="1" Source="proxy-server.smd" />
+      <File Id="regcomp.c" Name="regcomp.c" LongName="regcomp.c" DiskId="1" Source="regcomp.c" />
+      <File Id="regerror.c" Name="regerror.c" LongName="regerror.c" DiskId="1" Source="regerror.c" />
+      <File Id="regex.c" Name="regex.c" LongName="regex.c" DiskId="1" Source="regex.c" />
+      <File Id="regex.def" Name="regex.def" LongName="regex.def" DiskId="1" Source="regex.def" />
+      <File Id="regex.vcproj" Name="regex.vcp" LongName="regex.vcproj" DiskId="1" Source="regex.vcproj" />
+      <File Id="regexec.c" Name="regexec.c" LongName="regexec.c" DiskId="1" Source="regexec.c" />
+      <File Id="regfree.c" Name="regfree.c" LongName="regfree.c" DiskId="1" Source="regfree.c" />
+      <File Id="sample.c" Name="sample.c" LongName="sample.c" DiskId="1" Source="sample.c" />
+      <File Id="siod.c" Name="siod.c" LongName="siod.c" DiskId="1" Source="siod.c" />
+      <File Id="siod.rc" Name="siod.rc" LongName="siod.rc" DiskId="1" Source="siod.rc" />
+      <File Id="siod.sln" Name="siod.sln" LongName="siod.sln" DiskId="1" Source="siod.sln" />
+      <File Id="siod.vcproj" Name="siod.vcp" LongName="siod.vcproj" DiskId="1" Source="siod.vcproj" />
+      <File Id="siod.wxs" Name="siod.wxs" LongName="siod.wxs" DiskId="1" Source="siod.wxs" />
+      <File Id="siodm.c" Name="siodm.c" LongName="siodm.c" DiskId="1" Source="siodm.c" />
+      <File Id="slib.c" Name="slib.c" LongName="slib.c" DiskId="1" Source="slib.c" />
+      <File Id="sliba.c" Name="sliba.c" LongName="sliba.c" DiskId="1" Source="sliba.c" />
+      <File Id="slibu.c" Name="slibu.c" LongName="slibu.c" DiskId="1" Source="slibu.c" />
+      <File Id="slibw32.vcproj" Name="slibw32.vcp" LongName="slibw32.vcproj" DiskId="1" Source="slibw32.vcproj" />
+      <File Id="sql_msql.c" Name="sql_msql.c" LongName="sql_msql.c" DiskId="1" Source="sql_msql.c" />
+      <File Id="sql_oracle.c" Name="sqlorac.c" LongName="sql_oracle.c" DiskId="1" Source="sql_oracle.c" />
+      <File Id="sql_oracle.def" Name="sqlorac.def" LongName="sql_oracle.def" DiskId="1" Source="sql_oracle.def" />
+      <File Id="sql_oracle.vcproj" Name="sqloracl.vcp" LongName="sql_oracle.vcproj" DiskId="1" Source="sql_oracle.vcproj" />
+      <File Id="sql_rdb.c" Name="sql_rdb.c" LongName="sql_rdb.c" DiskId="1" Source="sql_rdb.c" />
+      <File Id="sql_sybase.c" Name="sqlsybas.c" LongName="sql_sybase.c" DiskId="1" Source="sql_sybase.c" />
+      <File Id="sql_sybasec.c" Name="sqlsybc.c" LongName="sql_sybasec.c" DiskId="1" Source="sql_sybasec.c" />
+      <File Id="ss.c" Name="ss.c" LongName="ss.c" DiskId="1" Source="ss.c" />
+      <File Id="ss.def" Name="ss.def" LongName="ss.def" DiskId="1" Source="ss.def" />
+      <File Id="ss.vcproj" Name="ss.vcp" LongName="ss.vcproj" DiskId="1" Source="ss.vcproj" />
+      <File Id="statfs.c" Name="statfs.c" LongName="statfs.c" DiskId="1" Source="statfs.c" />
+      <File Id="tar.c" Name="tar.c" LongName="tar.c" DiskId="1" Source="tar.c" />
+      <File Id="tar.def" Name="tar.def" LongName="tar.def" DiskId="1" Source="tar.def" />
+      <File Id="tar.vcproj" Name="tar.vcp" LongName="tar.vcproj" DiskId="1" Source="tar.vcproj" />
+      <File Id="trace.c" Name="trace.c" LongName="trace.c" DiskId="1" Source="trace.c" />
+      <File Id="wcsiod.c" Name="wcsiod.c" LongName="wcsiod.c" DiskId="1" Source="wcsiod.c" />
+      <File Id="wcsiod.vcproj" Name="wcsiod.vcp" LongName="wcsiod.vcproj" DiskId="1" Source="wcsiod.vcproj" />
+      <File Id="wmsiod.c" Name="wmsiod.c" LongName="wmsiod.c" DiskId="1" Source="wmsiod.c" />
+      <File Id="wmsiod.vcproj" Name="wmsiod.vcp" LongName="wmsiod.vcproj" DiskId="1" Source="wmsiod.vcproj" />
+     </Component>
+     <Directory Id="SIODBITMAPS" Name="Bitmaps">
+      <Component Id="SIODBITMAPS1" Guid="1A2B0A75-DBCC-4242-B9A9-26BB2DB31E14">
+       <File Id="bannrbmp.bmp" Name="bannrbmp.bmp" LongName="bannrbmp.bmp" DiskId="1" Source="Bitmaps/bannrbmp.bmp" />
+       <File Id="dlgbmp.bmp" Name="dlgbmp.bmp" LongName="dlgbmp.bmp" DiskId="1" Source="Bitmaps/dlgbmp.bmp" />
+       <File Id="siod.ico" Name="siod.ico" LongName="siod.ico" DiskId="1" Source="Bitmaps/siod.ico" />
+      </Component>
+     </Directory>
+    </Directory>
+   </Directory>
+  </Directory>
+
+  <DirectoryRef Id="SIODProgramsFolder">
+   <Component Id="SIODShortcut" Guid="87E57CFA-E4C9-4F1B-A336-729FF119069D" DiskId="1">
+    <Shortcut Id="SIODShortcut1" Name="SIOD" 
+              Description="Scheme in One Day (SIOD)" 
+              Directory="SIODProgramsFolder" 
+              Target="[SIODDIR]\wcsiod.exe" 
+              Icon="siodicon.exe" />
+    <Shortcut Id="SIODShortcut2" 
+              Name="license.rtf"  LongName="license.rtf"
+              Description="SIOD License" 
+              Directory="SIODProgramsFolder" 
+              Target="[SIODDIR]\license.rtf" 
+              />
+    <!-- Yes, I know, if the feature fSIODdocumentation is not
+         disabled in a custom install then these links will be invalid.
+         So the selection of short cuts really should depend on
+         which other components have been installed. 
+         On the other hand, the problem isn't fatal and does show
+         that there is documentation *available* someplace. -->
+    <Shortcut Id="SIODShortcut3" Name="SIOD.htm"  LongName="SIOD.html"
+              Description="SIOD Documentation" 
+              Directory="SIODProgramsFolder" 
+              Target="[SIODDIR]\siod.html" 
+              />
+    <Shortcut Id="SIODShortcut4" 
+              Name="siodrgx.htm"  LongName="siod_regex.html"
+              Description="SIOD Documentation regex" 
+              Directory="SIODProgramsFolder" 
+              Target="[SIODDIR]\siod_regex.html" 
+              />
+    <Shortcut Id="SIODShortcut5" 
+              Name="winsiod.htm"  LongName="winsiod.html"
+              Description="SIOD Documentation windows specific" 
+              Directory="SIODProgramsFolder" 
+              Target="[SIODDIR]\winsiod.html" 
+              />
+   <RemoveFolder Id="SIODProgramsFolder" On="uninstall"/>
+   </Component>
+  </DirectoryRef>
+
+  <Feature Id="fSIODexeruntime" Title="SIOD Runtime" Level="1" ConfigurableDirectory="SIODDIR">
+   <ComponentRef Id="SIODexeruntime" />
+  </Feature>
+  <Feature Id="fSIODdocumentation" Title="SIOD Documentation" Level="1" ConfigurableDirectory="SIODDIR">
+   <ComponentRef Id="SIODdocumentation" />
+  </Feature>
+  <Feature Id="fSIODShortcut" Title="Program Menu Short Cuts" Level="1">
+   <ComponentRef Id="SIODShortcut"/>
+  </Feature>
+  <Feature Id="fSIODCompiler" Title="SIOD Compiler" Level="4" ConfigurableDirectory="SIODDIR">
+   <ComponentRef Id="SIODcompiler" />
+  </Feature>
+  <Feature Id="fSIODcprogrammer" Title="SIOD C Programming" Level="5" ConfigurableDirectory="SIODDIR">
+   <ComponentRef Id="SIODcprogrammer" />
+  </Feature>
+  <Feature Id="fSIODsourcecode" Title="SIOD Source Code" Level="6" ConfigurableDirectory="SIODDIR">
+   <ComponentRef Id="SIODsourcecode" />
+   <ComponentRef Id="SIODBITMAPS1" />
+  </Feature>
+
+  <UIRef Id="WixUI_Mondo" /> 
+
+ </Product>
+</Wix>

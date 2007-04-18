@@ -1,0 +1,100 @@
+#!/usr/local/bin/siod -v01,-m2 -*-mode:lisp-*-
+
+;; name:    ftp-put
+;; purpose: An ftp client which will return an error
+;;          code to the calling program.
+;;          Also puts to a temporary filename and completes
+;;          the operation with a rename in order that the file
+;;          appear atomically. Also uses PASSIVE mode
+;;          so that the client does not have to be able to
+;;          accept tcp connections.
+;; author:  george j. carrette
+;;
+;; $Id: ftp-put.smd,v 1.4 1997/04/18 12:43:01 gjc Exp $
+
+(require 'ftp.scm)
+
+(define *ftp-put-buffsize* 2048)
+(define *ftp-use-rename* t)
+
+(define (boolean-option name defaultv)
+  (let ((value (lkey-default (cdddr *args*) name defaultv)))
+    (cond ((equal? value "true") t)
+	  ((equal? value "false") nil)
+	  ('else
+	   (error (string-append "invalid " name " option") value)))))
+
+(define (main)
+  (set! *ftp-debug* (boolean-option 'debug "true"))
+  (set! *ftp-use-rename* (boolean-option 'rename "true"))
+  (let ((buff (lkey-default (cdddr *args*) 'buff)))
+    (if (and buff (> (string->number buff) 0))
+	(set! *ftp-put-buffsize* (string->number buff))))
+  (ftp-put (or (larg-default (cdddr *args*) 0)
+	       (error "no local filename specified"))
+	   (or (larg-default (cdddr *args*) 1)
+	       (error "no remote host specified"))
+	   (larg-default (cdddr *args*)
+			 2
+			 (larg-default (cdddr *args*) 0))))
+
+(define (ftp-put local-filename remote-host remote-filename)
+  (let ((conn nil)
+	(data nil)
+	(local-file (if (equal? "." local-filename) nil
+		      (fopen local-filename "rb")))
+	(buffer (cons-array *ftp-put-buffsize* 'string))
+	(n nil)
+	(n-total 0)
+	(port-info nil)
+	(tmp-filename nil)
+	(status nil)
+	(before-realtime nil)
+	(after-realtime nil))
+    (define (status-check code errmsg)
+      (or (and (pair? status) (= (car status) code))
+	  (error errmsg
+		 (if (pair? status) (cadr status) status))))
+    (define (setconn v) (set! conn v))
+    (ftp-setup remote-host setconn)
+    (set! port-info (or (ftp-cmd-pasv conn) (error "pasv command failed")))
+    (set! tmp-filename (if *ftp-use-rename*
+			   (string-append remote-filename
+					  ",temp-"
+					  (nth 4 port-info)
+					  "-"
+					  (nth 5 port-info))
+			 remote-filename))
+    (ftp-send-command conn "STOR " tmp-filename)
+    (set! data (s-open (unbreakupstr (mapcar (lambda (x) (nth x port-info))
+					     '(0 1 2 3))
+				     ".")
+		       (+ (* 256 (string->number (nth 4 port-info)))
+			  (string->number (nth 5 port-info)))))
+    (set! status (ftp-read-response conn))
+    (status-check 150 "ftp STOR command failed")
+    (set! before-realtime (realtime))
+    (while (set! n (fread buffer local-file))
+      (set! n-total (+ n n-total))
+      (s-write (list buffer n) data))
+    (s-force-output data)
+    (s-close data)
+    (set! after-realtime (realtime))
+    (and local-file (fclose local-file))
+    (if (> (verbose) 0)
+	(writes nil n-total
+		" bytes transfered in "
+		(- after-realtime before-realtime)
+		" seconds. "
+		(if (> (- after-realtime before-realtime) 0)
+		    (/ n-total
+		       (- after-realtime before-realtime)))
+		" bytes per second.\n"))
+    (set! status (ftp-read-response conn))
+    (status-check 226 "file transfer failed")
+    (cond (*ftp-use-rename*
+	   (set! status (ftp-cmd conn "RNFR " tmp-filename))
+	   (status-check 350 "cannot rename temp file")
+	   (set! status (ftp-cmd conn "RNTO " remote-filename))
+	   (status-check 250 "failed to rename temp file")))
+    (ftp-teardown conn setconn)))

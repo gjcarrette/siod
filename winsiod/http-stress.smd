@@ -1,0 +1,41 @@
+#!/usr/local/bin/siod -v01,-m2 -*-mode:lisp-*-
+
+;; name:    http-stress.smd
+;; purpose: simple command line utility to test http servers.
+;; doc:     http://people.delphi.com/gjc/siod.html
+;; $Id: http-stress.smd,v 1.2 1997/09/17 19:32:17 gjc Exp $
+
+(require-so (so-ext 'ss))
+
+(require 'http-stress.scm)
+
+(define (main)
+  (set! *http-server-host* (larg-default (cdddr *args*) 0 "localhost"))
+  (set! *http-url-list* '("/"))
+  (if (larg-default (cdddr *args*) 1)
+      (let ((j 1)
+	    (arg nil))
+	(set! *http-url-list* nil)
+	(while (set! arg (larg-default (cdddr *args*) j))
+	  (set! *http-url-list* (append *http-url-list* (list arg)))
+	  (set! j (+ 1 j)))))
+  (set! *http-server-port* (string->number
+			    (lkey-default (cdddr *args*) 'port "80")))
+  (set! *main-url-verify*
+	(cadr (or (assoc (lkey-default (cdddr *args*) 'verify "true")
+			 '(("false") ("true" t)))
+		  (error "verify not true or false"
+			 (lkey-default (cdddr *args*) 'verify "false")))))
+  (set! *http-sleep* (string->number
+		      (lkey-default (cdddr *args*) 'sleep "0")))
+  (let ((n-forks (string->number (lkey-default (cdddr *args*) 'forks "5")))
+	(n-cycles (string->number (lkey-default (cdddr *args*) 'cycles "5"))))
+    (writes nil
+	    "Host:  " *http-server-host* ", "
+	    "Port:  " *http-server-port* ", "
+	    "total hits: " (* n-forks n-cycles) "\n"
+	    "forks: " n-forks ", hits per fork: " n-cycles ", "
+	    "url set length: " (length *http-url-list*) "\n")
+    (main-fork-random-url-test n-forks
+			       n-cycles)))
+

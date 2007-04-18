@@ -1,0 +1,33 @@
+#!/usr/local/bin/siod -v01,-m2 -*-mode:lisp-*-
+
+;; $Id: snapshot-dir.smd,v 1.2 1998/02/20 12:52:13 gjc Exp $
+
+(define (get-positional-arguments)
+  (let ((result nil)
+	(j 0)
+	(arg nil))
+    (while (set! arg (larg-default (cdddr *args*) j))
+      (set! result (cons arg result))
+      (set! j (+ 1 j)))
+    (nreverse result)))
+    
+
+(define (main)
+  (let ((directories (or (get-positional-arguments)
+			 (error "no directory or file name specified")))
+	(snapshot-file (lkey-default (cdddr *args*) 'output)))
+    (require 'find-files.scm)
+    (let ((info (get-filesystem-snapshots directories)))
+      (cond (snapshot-file
+	     (save-forms snapshot-file info))
+	    ('else
+	     (mapcar (lambda (x)
+		       (writes nil "(")
+		       (print (car x))
+		       (mapcar (lambda (x)
+				 (writes nil " ")
+				 (print x))
+			       (cdr x))
+		       (writes nil ")\n"))
+		     info))))))
+

@@ -1,0 +1,68 @@
+#!/usr/local/bin/siod -v01,-m2 -*-mode:lisp-*-
+
+;; name:    fixcrlf.smd
+;; purpose: get rid of CRLF sequence introduced by the way
+;;          files are transported between Unix and WIN95 sometimes.
+;; $Id: fixcrlf.smd,v 1.1 1997/04/28 21:00:58 gjc Exp $
+
+(define *action* "read")
+
+(define (main)
+  (set! *action* (lkey-default (cdddr *args*) 'action *action*))
+  (mapcar fixcrlf (get-args)))
+
+(define (get-args)
+  (let ((j 0)
+	(arg nil)
+	(result nil))
+    (while (set! arg (larg-default (cdddr *args*) j))
+      (set! result (cons arg result))
+      (set! j (+ 1 j)))
+    (nreverse result)))
+
+(define (lines-from-file fname)
+  (let ((f (fopen fname "r"))
+	(line nil)
+	(result nil))
+    (while (set! line (readline f))
+      (set! result (cons line result)))
+    (fclose f)
+    (nreverse result)))
+
+(define (lines-to-file lines fname)
+  (let ((f (fopen fname "w"))
+	(l lines))
+    (while l
+      (writes f (car l) "\n")
+      (set! l (cdr l)))
+    (fclose f)))
+
+(define (line-crlf? x)
+  (substring-equal? "\r" x (- (length x) 1) (length x)))
+
+(define (fixcrlf fname)
+  (let ((tmpname (string-append fname "-temp"))
+	(lines nil)
+	(bad nil))
+    (set! lines (lines-from-file fname))
+    (cond ((set! bad (subset line-crlf? lines))
+	   (writes nil fname " has " (length bad)
+		   " CRLF terminated lines.\n")
+	   (set! lines (mapcar (lambda (x)
+				 (if (line-crlf? x)
+				     (substring x 0 (- (length x) 1))
+				   x))
+			       lines))
+	   (cond ((not (equal? *action* "write")))
+		 ((access-problem? fname "w")
+		  (writes nil "Can't write " fname  " "
+			  (access-problem? fname "w")
+			  "\n"))
+		 ('else
+		  ;; make sure we really can write to the file.
+		  (fclose (fopen fname "a+"))
+		  ;; because rename technique is dangerous, bypasses
+		  ;; RCS conventions.
+		  (lines-to-file lines tmpname)
+		  (rename tmpname fname)
+		  (writes nil "Fixed.\n")))))))
