@@ -1,0 +1,82 @@
+.TH PROXY-SERVER 1C LOCAL 
+.SH NAME
+proxy-server \- serializing, transaction logging http proxy server
+.SH SYNOPSIS
+.B proxy-server 
+[server-ip] [server-port] [:prefix=filename_prefix] [:overwrite=false]
+[:start=0]
+.SH DESCRIPTION
+.I proxy-server
+is a crude http proxy server which accepts one connection
+at a time and logs all information about the transaction
+between the client and server to a set of files containing
+a sequence number.
+
+The client request is logged to file type 
+.B req
+the responsed headers from the server are file type
+.B hdr
+and the content from the server to a file type which depends
+on the mime type of the result,
+.B txt
+,
+.B html
+,
+.B gif
+,
+.B jpg
+are supported, and the default for any unknown are unspecified
+type is
+.B dat
+.
+.RE
+.SS COMMAND LINE OPTIONS
+.TP 8
+.BI [server-ip]
+The
+.I server-ip
+defaults to 0.0.0.0.
+.TP
+.BI [server-port]
+The
+.I server-port
+defaults to 9000.
+.TP
+.BI :prefix=XXXX
+The 
+.I XXXXX
+is the prefix used for the transaction log files.
+It defaults to YEAR MONTH DAY HOUR MINUTE SECOND
+of the time the command was stated.
+.TP
+.BI :start=index
+The 
+.I index
+plus 1 is the first filename created.
+.TP
+.BI :overwrite=status
+The
+.I status
+is 
+.B 
+false, the default, to prevent the proxy server from overwriting
+its log files. A setting of 
+.B true 
+will allow files to be overwritten,
+and a setting of 
+.B skip 
+will cause the filename counter to be incremented
+until an overwrite is avoided.
+
+.SH BUGS
+
+This utility isn't robust enough to run continuously
+as a proxy server. It is intended to be run from the command
+line, to be monitored during use, and to be restarted manually
+if needed. You might see errors messages such as empty request
+from client, accept (errobj Protocol error) and recv (errobj
+Connection reset by peer), from time to time, depending
+on the client browser and tcp stack.
+
+.SH SEE ALSO
+siod http://people.delphi.com/gjc/siod.html

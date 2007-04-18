@@ -1,0 +1,66 @@
+
+
+
+FTP-GET(1C)          Communication Commands           FTP-GET(1C)
+
+
+
+NAME
+     ftp-get - copy files from local host to remote using passive
+     mode ftp
+
+SYNOPSIS
+     ftp-get    LocalFilename     RemoteHost     [RemoteFilename]
+     [:debug=true] [:buff=2048]
+
+DESCRIPTION
+     ftp-get  Opens  a  connection  to  the  ftp  server  on  the
+     RemoteHost,  and  gets  the  LocalFilename  to  a  temporary
+     filename constructed from the RemoteFilename.
+
+
+EXIT STATUS
+     Errors result in a non-zero exit status.
+
+
+AUTHOR
+     gjc@world.std.com
+
+
+SEE ALSO
+     siod ftp-cp http://people.delphi.com/gjc/siod.html
+
+
+FILES
+     /usr/local/bin/ftp-get                   /usr/local/bin/siod
+     /usr/local/lib/libsiod.so          /usr/local/lib/siod/ss.so
+     /usr/local/lib/siod/ftp.scm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SunOS 5.5              Last change: LOCAL                       1
+
+
+

@@ -1,0 +1,138 @@
+#!/usr/local/bin/siod -v01,-m2 -*-mode:lisp-*-
+
+;; name:    csiod.smd
+;; purpose: convert a scheme source file to an executable
+;;          command file, using unix "#!" magic, with
+;;          interpreter defaulting to what was used
+;;          to run this file.
+;; $Id: csiod.smd,v 1.6 1997/12/01 16:27:10 gjc Exp $
+
+(define (get-default-i-flag fname)
+  (let ((default "/usr/local/bin/siod"))
+    (cond ((not fname)
+	   default)
+	      ((memq (os-classification) '(win32 vms))
+		   default)
+	  ('else
+	   (let ((f (fopen fname "r"))
+		 (line nil))
+	     (set! line (readline f))
+	     (fclose f)
+	     (cond ((not (substring-equal? "#!" line 0 2))
+		    default)
+		   ('else
+		    (set! line (string-trim (substring line 2)))
+		    (set! line (substring line 0
+					  (string-search " " line)))
+		    line)))))))
+
+(define *default-b-flag*
+  (cond ((memq (os-classification) '(win32))
+         "wcsiod.exe")
+		('else "siod.exe")))
+
+(define (main)
+  (let ((input-files nil)
+	(arg nil)
+	(j 0)
+	(output-file (lkey-default (cdddr *args*) 'o 
+	                (if (memq (os-classification) '(unix))
+					    "a.out"
+						nil)))
+	(m-flag (lkey-default (cdddr *args*) 'm "2"))
+	(v-flag (lkey-default (cdddr *args*) 'v "01"))
+	(i-flag (lkey-default (cdddr *args*) 'i nil))
+	(p-flag (lkey-default (cdddr *args*) 'p "fasl"))
+	(e-flag (lkey-default (cdddr *args*) 'e "false"))
+	(b-flag (lkey-default (cdddr *args*) 'b *default-b-flag*))
+	(forms nil))
+    (or output-file (error "must specify :o=XXX for output"))
+    (or i-flag (set! i-flag (get-default-i-flag
+			     (and (> (length *args*) 2)
+				  (nth 2 *args*)))))
+    (while (set! arg (larg-default (cdddr *args*) j nil))
+      (set! input-files (append input-files (list arg)))
+      (set! j (+ 1 j)))
+    (or input-files
+	(error "no source, object or ucode file specified"))
+    (set! forms (process-input-files input-files
+				     (cond ((equal? "false" e-flag)
+					    nil)
+					   ((equal? "true" e-flag)
+					    t)
+					   ('else
+					    (error "e-flag not true or false"
+						   e-flag)))))
+    (cond ((equal? p-flag "fasl")
+	       (if (output-is-exe? output-file)
+			   (let ((f (fopen output-file "wb")))
+			     (write-exe-bootstrap f b-flag)
+				 (fclose f)))		 
+	       (fast-save output-file
+		      forms
+		      nil
+		      (string-append
+		       "#!" i-flag " "
+		       "-v" v-flag ","
+		       "-m" m-flag "\n# -*-parser:fasl-*-\n")
+               (and (output-is-exe? output-file)
+					"ab")))
+	  ((equal? p-flag "read")
+	   (let ((f (fopen output-file (if (output-is-exe? output-file)
+	                                   "wb" "w"))))
+         (if (output-is-exe? output-file)
+		     (write-exe-bootstrap f))
+	     (writes f
+		     "#!" i-flag " "
+		     "-v" v-flag ","
+		     "-m" m-flag "\n# -*-parser:read-*-\n")
+	     (while forms
+	       (print (car forms) f)
+	       (set! forms (cdr forms)))
+	     (fclose f)))
+	  ('else
+	   (error "unknown p (parser) option" p-flag)))
+    (cond ((not (memq (os-classification) '(vms)))
+	   (chmod output-file
+		  (encode-file-mode 
+		   (append '(RUSR WUSR XUSR)
+			   (if (memq (os-classification) '(win32 vms))
+			       nil
+			     '(RGRP XGRP ROTH XOTH)))))))))
+
+
+(define (output-is-exe? x)
+  (and (memq (os-classification) '(win32 vms))
+       (> (length x) 4)
+       (equal? ".EXE" (string-upcase (substring x (- (length x) 4))))))
+
+(define (write-exe-bootstrap f bootstrap)
+  (let ((bf (fopen (string-append (siod-lib) bootstrap) "rb"))
+        (buff (cons-array 1000 'byte))
+	(n nil)
+	(total-size 0))
+    (while (set! n (fread buff bf))
+      (fwrite (if (= n (length buff)) buff (list buff n)) f)
+      (set! total-size (+ total-size n)))
+    (fclose bf)
+    (if (> total-size (position-script 'bootstrap-exe-file-size-limit))
+	(error "Size of bootstrap exe is over the fixed limit"
+	       (list bootstrap total-size
+		     (position-script 'bootstrap-exe-file-size-limit))))))
+
+	       
+		 
+
+;; Note: we don't even do macroexpansions here.
+
+(define (require-registration-form fname)
+  ;; so that (require 'xxxx) wouldn't be confused into loading
+  ;; an already bound file.
+  (list 'set! (intern (string-append "*" fname "-loaded*")) 't))
+
+(define (process-input-files l e-flag)
+  (apply append (mapcar (lambda (x)
+			  (if e-flag (load x nil t))
+			  (append (load x t t)
+				  (list (require-registration-form x))))
+			l)))

@@ -1,0 +1,319 @@
+#!/usr/local/bin/siod -v01,-m2 -*-mode:lisp-*-
+
+;; name:    proxy-server.smd
+;; purpose: A single-threaded http proxy server for diagnostic purposes.
+;;          This serializes all requests and saves the results
+;;          to individual files for later inspection by software QA/QC
+;;          tools.
+;; created: 5-SEP-1997, George J. Carrette
+;; $Id: proxy-server.smd,v 1.9 1998/03/17 17:56:05 gjc Exp $
+
+(require-so (so-ext 'ss))
+
+(define *fname-prefix* nil)
+(define *fname-counter* 0)
+(define *fname-careful* t)
+(define *bug-1-work-around* nil)
+
+(define (main-test)
+  (set! *args* '("" "" "" "0.0.0.0" "9002"))
+  (main))
+
+(define (ymdhms)
+  (cond ((symbol-bound? 'strftime)
+	 (strftime "%Y%m%d%H%M%S"))
+	('else
+	 (let ((x (localtime)))
+	   (define (a b) (cdr (assq b x)))
+	   (string-append (number->string (+ 1900 (a 'year)) 10)
+			  (number->string (+ 1 (a 'mon)) 10 2)
+			  (number->string (a 'mday) 10 2)
+			  (number->string (a 'hour) 10 2)
+			  (number->string (a 'min) 10 2)
+			  (number->string (a 'sec) 10 2))))))
+
+(define (main)
+  (let ((server-ip (larg-default (cdddr *args*) 0 "0.0.0.0"))
+	(server-port (string->number (larg-default (cdddr *args*) 1 "9000"))))
+    (set! *fname-prefix*
+	  (lkey-default (cdddr *args*) 'prefix
+			(string-append (ymdhms) "-")))
+    (set! *fname-counter* (string->number (lkey-default (cdddr *args*)
+							'start
+							"0")))
+    (set! *fname-careful* (cadr (or (assoc (lkey-default
+					    (cdddr *args*)
+					    'overwrite
+					    "false")
+					   '(("false" t)
+					     ("true" ())
+					     ("skip" skip)))
+				    (error ":overwrite= must be true or false"
+					   (lkey-default (cdddr *args*)
+							 'overwrite)))))
+    (set! *bug-1-work-around*
+	  (equal? "true" (cadr (lkey-default (cdddr *args*) 'bug1))))
+
+    (writes nil
+	    "Server-ip      = " server-ip "\n"
+	    "Server-port    = " server-port "\n"
+	    "fname prefix   = " *fname-prefix* "\n"
+	    "fname start    = " *fname-counter* "\n"
+	    "file overwrite = " (or (cadr (assq *fname-careful*
+						'((() "true")
+						  (t "false"))))
+				    (list 'not *fname-careful*))
+	    "\n")
+    (http-proxy-server server-ip server-port)))
+
+(define (http-proxy-server ip port)
+  (let ((s nil)
+	(a nil)
+	(before-time nil)
+	(after-time nil))
+    (*catch 'errobj
+	    (set! s (s-open ip port 10))
+	    (writes nil "*** listening ***\n")
+	    (while t
+	      (increment-fname-counter)
+	      (set! a nil)
+	      (let ((msg (*catch 'errobj
+				 (set! a (s-accept s))
+				 (writes nil "*** accepted "
+					 (cons-fname "")
+					 " ***\n")
+				 (set! before-time (realtime))
+				 (http-proxy-service-one a)
+				 (s-force-output a)
+				 (s-close a)
+				 (set! a nil)
+				 (set! after-time (realtime))
+				 (writes nil "*** Done in "
+					 (- after-time before-time) " "
+					 " seconds ***\n")
+				 nil)))
+		(cond ((and (pair? msg) (string? (car msg)) a)
+		       ;; attempt to send error message to client.
+		       ;; even though half a message might already been
+		       ;; through.
+		       (s-puts "HTTP/1.0 500 " a)
+		       (s-puts (car msg) a)
+		       (s-puts "\r\nContent-type: text/html\r\n\r\n" a)
+		       (s-puts "<PRE>PROXY ERROR at " a)
+		       (s-puts (unix-ctime) a)
+		       (s-puts "\n" a)
+		       (s-puts (car msg) a)
+		       (s-puts "\n</PRE>\n" a)
+		       (s-force-output a)
+		       (s-close a))))
+	      (set! a nil)))
+    (if a (s-close a))
+    (if s (s-close s))))
+
+(define *key-content-length* "content-length: ")
+(define *key-content-type* "content-type: ")
+
+(define (cons-fname type)
+  (string-append *fname-prefix*
+		 (number->string *fname-counter* 10 5)
+		 "."
+		 type))
+
+(define (http-proxy-service-one a)
+  (let ((line nil)
+	(content-length nil)
+	(request-headers nil)
+	(request-content nil)
+	(response nil)
+	(count 0)
+	(fname nil))
+    (while (and (set! line (s-gets a))
+		(not (or (equal? line "\r\n")
+			 (equal? line "\n"))))
+      (set! request-headers (cons line request-headers))
+      (if (substring-equalcase? *key-content-length*
+				line
+				0
+				(length *key-content-length*))
+	  (set! content-length (string->number
+				(substring line
+					   (length *key-content-length*))))))
+    (cond (content-length
+	   (set! request-content (s-read content-length a))))
+    (set! fname (cons-fname "req"))
+    (set! request-headers (nreverse request-headers))
+    (let ((f (fopen-w-careful fname)))
+      (mapcar (lambda (x)
+		(writes f x))
+	      request-headers)
+      (cond (content-length
+	     (writes f "\n")
+	     (fwrite (list request-content content-length) f)))
+      (fclose f))
+    (or request-headers
+	(error "empty request from client"))
+    (set! response (http-proxy-operation request-headers
+					 ;; some buggy servers expect
+					 ;; to see extra CRLF which is not
+					 ;; indicated in the content-length
+					 (if (and
+					      *bug-1-work-around*
+					      (pair? request-headers)
+					      (substring-equal?
+					       "POST"
+					       (car request-headers)))
+					     (string-append
+					      request-content
+					      "\r\n")
+					   request-content)))
+    (set! fname (cons-fname "hdr"))
+    (let ((f (fopen-w-careful fname))
+	  (l response))
+      (while (and l (car l))
+	(writes f (car l) "\n")
+	(set! l (cdr l)))
+      (fclose f))
+    (set! fname (cons-fname (response-file-type response)))
+    (let ((f (fopen-w-careful fname))
+	  (l (cdr (memq nil response))))
+      (while l
+	(fwrite (car l) f)
+	(set! l (cdr l)))
+      (fclose f))
+    (set! response (proxy-response-normalize response))
+    (if (car response)
+	(writes nil (string-trim (car response)) "\n"))
+    (let ((l response))
+      (while (and l (car l))
+	(s-puts (car l) a)
+	(s-puts "\r\n" a)
+	(set! l (cdr l))))
+    (s-puts "\r\n" a)
+    (let ((l (cdr (memq nil response))))
+      (while l
+	(s-write (car l) a)
+	(set! l (cdr l))))))
+
+(define (proxy-response-normalize response)
+  ;; in case there are headers we don't want
+  response)
+
+(define (ok-header-to-pass-to-server? x)
+  (and (not (substring-equalcase? "proxy-connection: " x))
+       (not (substring-equalcase? "connection: " x))))
+
+(define (http-proxy-operation request-headers request-content)
+  (let ((request-cmd (strbreakup (car request-headers) " "))
+	(request-url nil)
+	(request-host nil)
+	(request-port 80)
+	(request-uri nil)
+	(http-key "http://")
+	(i nil)
+	(s nil)
+	(line nil)
+	(result nil)
+	(response-headers nil))
+    (or (set! request-url (cadr request-cmd))
+	(error "badly formed request"))
+    (cond ((not (substring-equalcase? http-key
+				      request-url
+				      0
+				      (length http-key)))
+	   (error "not http protocol operation"
+		  (cadr request-cmd))))
+    (set! request-url (substring request-url (length http-key)))
+    (or (set! j (string-search "/" request-url))
+	(error "no / in request url" request-url))
+    (set! request-host (substring request-url 0 j))
+    (set! request-uri (substring request-url j))
+    (cond ((set! j (string-search ":" request-host))
+	   (set! request-port (string->number
+			       (substring request-host (+ j 1))))
+	   (set! request-host (substring request-host 0 j))))
+    (writes nil "Proxy "
+	    (car request-cmd)
+	    " "
+	    request-host
+	    ":" request-port
+	    " " request-uri
+	    (if request-content " (")
+	    (if request-content (string-dimension request-content))
+	    (if request-content " bytes)")
+	    "\n")
+    (set! s (s-open request-host request-port))
+    (s-puts (car request-cmd) s)
+    (s-puts " " s)
+    (s-puts request-uri s)
+    (s-puts " " s)
+    (s-puts (caddr request-cmd) s)
+    (let ((l (subset ok-header-to-pass-to-server?
+		     (cdr request-headers))))
+      (while l
+	(s-puts (car l) s)
+	(set! l (cdr l))))
+    (s-puts "\r\n" s)
+    (if request-content
+	(s-write request-content s))
+    (s-force-output s)
+    (while (and (set! line (s-gets s))
+		(not (or (equal? line "\r\n")
+			 (equal? line "\n"))))
+      (set! response-headers (cons (string-trim line) response-headers)))
+    (set! response-headers (nreverse response-headers))
+    (while (set! line (s-gets s))
+      (set! result (cons line result)))
+    (s-close s)
+    (nconc response-headers
+	   (cons nil (nreverse result)))))
+
+(define *content-type-mappings*
+  '(("text/plain" "txt")
+    ("text/html" "html")
+    ("image/gif" "gif")
+    ("image/jpeg" "jpg")
+    ("application/x-netcdf" "cdf")
+    ))
+
+(define (get-header response key)
+  (let ((l response)
+	(value nil))
+    (while (and l (car l) (not value))
+      (cond ((substring-equalcase? key (car l) 0 (length key))
+	     (set! value (substring (car l) (length key)))))
+      (set! l (cdr l)))
+    value))
+
+(define (response-file-type response)
+  (let ((type (get-header response *key-content-type*)))
+    (or (and type
+	     (cadr (assoc (string-downcase
+			   (string-trim
+			    (car (strbreakup type ";"))))
+			  *content-type-mappings*)))
+	"dat")))
+
+(define (file-exits? fname)
+  (cond ((symbol-bound? 'access-problem?)
+	 (not (access-problem? fname "f")))
+	('else
+	 (stat fname))))
+
+(define (fopen-w-careful fname)
+  (cond ((and *fname-careful* (file-exits? fname))
+	 (error "file already exists" fname))
+	('else
+	 (fopen fname "w"))))
+
+(define (increment-fname-counter)
+  (set! *fname-counter* (+ 1 *fname-counter*))
+  (cond ((eq? 'skip *fname-careful*)
+	 (let ((j 0)
+	       (limit 10000))
+	   (while (and (< j limit)
+		       (file-exists? (cons-fname "req")))
+	     (set! *fname-counter* (+ 1 *fname-counter*))
+	     (set! j (+ 1 j)))
+	   (or (< j limit)
+	       (error "had to skip too many files to implement :overwrite=skip"
+		      limit))))))

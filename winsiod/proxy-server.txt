@@ -1,0 +1,132 @@
+
+
+
+PROXY-SERVER(1C)     Communication Commands      PROXY-SERVER(1C)
+
+
+
+NAME
+     proxy-server - serializing, transaction logging  http  proxy
+     server
+
+SYNOPSIS
+     proxy-server            [server-ip]            [server-port]
+     [:prefix=filename_prefix] [:overwrite=false] [:start=0]
+
+DESCRIPTION
+     proxy-server is a crude http proxy server which accepts  one
+     connection  at  a  time  and  logs all information about the
+     transaction between the client and server to a set of  files
+     containing a sequence number.
+
+     The client request is logged to file type req the  responsed
+     headers  from  the  server are file type hdr and the content
+     from the server to a file type which  depends  on  the  mime
+     type  of  the  result, txt , html , gif , jpg are supported,
+     and the default for any unknown are unspecified type is dat
+
+  COMMAND LINE OPTIONS
+     [server-ip]
+             The server-ip defaults to 0.0.0.0.
+
+     [server-port]
+             The server-port defaults to 9000.
+
+     :prefix=XXXX
+             The XXXXX is the prefix used for the transaction log
+             files.   It  defaults  to YEAR MONTH DAY HOUR MINUTE
+             SECOND of the time the command was stated.
+
+     :start=index
+             The index plus 1 is the first filename created.
+
+     :overwrite=status
+             The status is false, the  default,  to  prevent  the
+             proxy  server from overwriting its log files. A set-
+             ting of true will allow files to be overwritten, and
+             a setting of skip will cause the filename counter to
+             be incremented until an overwrite is avoided.
+
+
+BUGS
+     This utility isn't robust enough to run  continuously  as  a
+     proxy  server.  It  is  intended  to be run from the command
+     line, to be monitored during use, and to be restarted  manu-
+     ally  if needed. You might see errors messages such as empty
+     request from client, accept (errobj Protocol error) and recv
+     (errobj  Connection  reset  by  peer),  from  time  to time,
+     depending on the client browser and tcp stack.
+
+
+
+
+SunOS 5.5              Last change: LOCAL                       1
+
+
+
+
+
+
+PROXY-SERVER(1C)     Communication Commands      PROXY-SERVER(1C)
+
+
+
+SEE ALSO
+     siod http://people.delphi.com/gjc/siod.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SunOS 5.5              Last change: LOCAL                       2
+
+
+

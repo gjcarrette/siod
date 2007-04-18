@@ -1,0 +1,66 @@
+
+
+
+HTTP-STRESS(1C)      Communication Commands       HTTP-STRESS(1C)
+
+
+
+NAME
+     http-stress - simple http parallel client  for  http  server
+     stress measurements.
+
+SYNOPSIS
+     http-stress [:verify=true] [:port=80] [:forks=5] [:cycles=5]
+     [:sleep=0] [host] [url1] [url2] [...]
+
+DESCRIPTION
+     http-stress is a simple http  command-client  which  fetches
+     randomly  selected urls from the host specified. The program
+     creates parallel  client  forks  where  each  client  cycles
+     through the specified number of times.
+
+  COMMAND LINE OPTIONS
+     :verify=XXXXX
+             The XXXXX is true or false. If true  then  the  urls
+             are  first fetched one by one in order with the http
+             result headers displayed to the standard output.
+
+     :port=XXXX
+             The XXXXX can be any legal port number, default 80.
+
+     :cycles=XXXXX
+             The XXXXXX number of  hits  for  each  client  fork,
+             default 5.
+
+     :forks=XXXXX
+             The XXXXX number of client forks running  in  paral-
+             lel, default 5.
+
+     :sleep=X
+             The number of seconds X to sleep after  sending  the
+             http   request  and  before  reading  the  response.
+             Defaults to 0.
+
+     host    The host defaults to localhost.
+
+     url     The url defaults to /. Multiple urls may  be  speci-
+             fied.
+
+FILES
+     http-stress http-stress.scm
+
+IDENTIFICATION
+     author: George J. Carrette
+
+SEE ALSO
+     siod http://people.delphi.com/gjc/siod.html
+
+
+
+
+
+
+SunOS 5.5              Last change: LOCAL                       1
+
+
+

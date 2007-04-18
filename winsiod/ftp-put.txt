@@ -1,0 +1,66 @@
+
+
+
+FTP-PUT(1C)          Communication Commands           FTP-PUT(1C)
+
+
+
+NAME
+     ftp-put - copy files from local host to remote using passive
+     mode ftp
+
+SYNOPSIS
+     ftp-put    LocalFilename     RemoteHost     [RemoteFilename]
+     [:debug=true] [:buff=2048] [:rename=true]
+
+DESCRIPTION
+     ftp-put  Opens  a  connection  to  the  ftp  server  on  the
+     RemoteHost,  and  puts,  using  ftp passive mode, the Local-
+     Filename  to  a  temporary  filename  constructed  from  the
+     RemoteFilename.  When the data transfer is complete a RENAME
+     operation is issued. Therefore  the  RemoteFilename  appears
+     atomically.  This  is very important when uploading files to
+     an area from which other ftp and http processes are actively
+     serving.  If  :rename=false then the file is stored directly
+     without renaming.
+
+     Username and password may  be  picked  up  from  environment
+     variables  (RemoteHost_USER and RemoteHost_PASS) or the user
+     is prompted.
+
+     If LocalFilename is . (dot) then the data is read from stan-
+     dard input.
+
+
+EXIT STATUS
+     Errors result in a non-zero exit status.
+
+
+AUTHOR
+     gjc@world.std.com http://people.delphi.com/gjc/siod.html
+
+
+SEE ALSO
+     siod ftp-cp
+
+
+FILES
+     /usr/local/bin/ftp-put                   /usr/local/bin/siod
+     /usr/local/lib/libsiod.so          /usr/local/lib/siod/ss.so
+     /usr/local/lib/siod/ftp.scm
+
+
+BUGS
+     The password is received using the  built-in  unix  getpass,
+     which  on some systems (Solaris) truncates the user input to
+     8 characters.  If the remote system can handle longer  pass-
+     words then this is a problem.
+
+
+
+
+
+SunOS 5.5              Last change: LOCAL                       1
+
+
+

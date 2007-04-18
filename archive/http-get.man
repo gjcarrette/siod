@@ -1,0 +1,80 @@
+.TH HTTP-GET 1C LOCAL 
+.SH NAME
+http-get \- simple http client and siod example program
+.SH SYNOPSIS
+.B http-get
+url [output-file] [:proxy=name] [:header=true] [:username=xx] [:password=xx] [:alarm=seconds] [:post=filename] [:cookie=value] [:redirect=true] [:check-status=false] [:host=true]
+.SH DESCRIPTION
+.I http-get
+is a simple http command-client which demonstrates the use of
+siod socket and regular expression capabilities.
+
+.RE
+.SS COMMAND LINE OPTIONS
+.TP 8
+.BI :proxy=XXXXX
+The
+.I XXXXX
+is the name of the proxy server followed by a colon and a port number.
+.TP
+.BI :header=XXXXX
+The 
+.I XXXXX
+if equal to true causes the http headers to be output
+along with the content. If equal to only causes only the http header
+to be output.
+.TP
+.BI :username=XXXXX
+The
+.I XXXXXX
+is the plain text username to transmit using basic authentication.
+.TP
+.BI :password=XXXXX
+The
+.I XXXXX
+is the plaintext password.
+.TP
+.BI :post=filename
+The
+.I filename
+contains lines of the form keyword=value. Both the keywords
+and values are url encoded, and the result is transmitted
+to the web server as a POST of application/x-www-form-urlencoded
+content.
+.TP
+.BI :cookie=value
+A cookie header is included with the request. If the value is true
+then then the  set-cookie headers are used to obtain the cookie value,
+although the entire cookie spec is not implemented. Otherwise value
+is used as the value of the cookie header.
+
+.TP
+.BI :redirect=value
+If
+.I value
+is true (default) then redirections are handled by a recursive call
+to http-get.
+
+.TP
+.BI :check-status=false
+If
+.I value
+is true then before storing then an error exit status is returned
+if the http response status is not of the form 2xx,
+in which case no content data is stored in the output file.
+
+.TP
+.BI :host=value
+If
+.I value
+is true (default) then an http 1.1 style "Host:" header is sent.
+If false then none is sent. Otherwise the value specified is
+used as the host header.
+
+.SH FILES
+http-get http-stress.scm
+.PD
+.SH SEE ALSO
+siod http://people.delphi.com/gjc/siod.html
+
+

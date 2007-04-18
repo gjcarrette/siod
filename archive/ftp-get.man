@@ -1,0 +1,26 @@
+.TH FTP-GET 1C LOCAL 
+.SH NAME
+ftp-get \- copy files from local host to remote using passive mode ftp
+.SH SYNOPSIS
+.B ftp-get LocalFilename RemoteHost [RemoteFilename] [:debug=true] [:buff=2048]
+.SH DESCRIPTION
+.I ftp-get
+Opens a connection to the ftp server on the RemoteHost, and gets
+the LocalFilename to a temporary filename constructed from the RemoteFilename.
+
+.SH EXIT STATUS
+
+Errors result in a non-zero exit status.
+
+.SH AUTHOR
+gjc@world.std.com
+
+.SH SEE ALSO
+siod ftp-cp http://people.delphi.com/gjc/siod.html
+
+.SH FILES
+/usr/local/bin/ftp-get
+/usr/local/bin/siod
+/usr/local/lib/libsiod.so
+/usr/local/lib/siod/ss.so
+/usr/local/lib/siod/ftp.scm

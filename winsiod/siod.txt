@@ -1,0 +1,198 @@
+
+
+
+SIOD(1C)             Communication Commands              SIOD(1C)
+
+
+
+NAME
+     siod - small scheme interpreter (Scheme In One Defun).
+
+SYNOPSIS
+     siod [-sX] [-hX] [-iX] [-gX] [-oX] [-nX] [-eX]  [-vX]  [-lX]
+     [-mX] [-vX] [filenames]
+
+DESCRIPTION
+     Siod is a very small scheme interpreter which  can  be  used
+     for interactive calculations, scripts, or included as a com-
+     mand interpreter or extension/macro language in other appli-
+     cations.  See the documentation for interfacing requirements
+     and how to add user-defined data types. The dash-style  com-
+     mand line options may also be delimited by commas.
+
+
+ARGUMENTS
+     The arguments are files which are loaded from the current or
+     SIOD_LIB directory, by usual default /usr/local/lib/siod. Or
+     the symbol repl to cause  entry  into  the  read-eval-print-
+     loop, or parenthetical expressions to be evaluated.
+
+
+  COMMAND LINE OPTIONS
+     -hXXXXX  The XXXXX should  be  an  integer,  specifying  the
+             number  of  cons  cells to allocate in the heap. The
+             default is 100000:10. Or an integer  followed  by  a
+             colon,  the  number  after  which  gives the maximum
+             number of heaps to malloc with  mark  and  sweep  gc
+             mode.
+
+     -iXXXXX  The XXXXX should be the name of  an  init  file  to
+             load before going into the read/eval/print loop.
+
+     -gX      The X is 1 for a stop and copy garbage collector, 0
+             for a mark and sweep one (the default).
+
+     -oXXXXX  The XXXXX should be an integer, specifying the size
+             of  the obarray (symbol hash table) to use. Defaults
+             to 1000. Each array element is a list of symbols.
+
+     -nXXXXX  The XXXXX should  be  an  integer,  specifying  the
+             number of pre-cons numbers to create. The default is
+             100.
+
+     -sXXXXX  The XXXXX should  be  an  integer,  specifying  the
+             number  of bytes of recursion on the machine (C-call
+             frame) stack to allow. This may be changed while the
+             programming  is running, and is mainly a convenience
+             for detecting defects in programs. Default 200000.
+
+     -eXXXXX  The XXXXX  is  an  expression  to  evaluate  (after
+
+
+
+SunOS 5.5              Last change: LOCAL                       1
+
+
+
+
+
+
+SIOD(1C)             Communication Commands              SIOD(1C)
+
+
+
+             loading  the  init  file, if any).  After evaluating
+             the expression the program will exit.
+
+     -lXXXXX  The XXXXX is a library directory  to  use  for  the
+             require procedure. defaults to the environment vari-
+             able SIOD_LIB or /usr/local/lib/siod.
+
+     -vXXXXX  The XXXXX is an integer verboseness from  0  to  4.
+             When used in scripts the most generally useful level
+             is 0. Defaults to 4.
+
+     -mXXXXX  The XXXXX can be 0 (default) which has  no  effect,
+             or  1,  which causes the scheme procedure main, with
+             no arguments to  be  invoked  after  all  files  are
+             loaded, or 2, which does the same thing but prevents
+             further arguments  from  being  interpreted,  or  3,
+             which  will  wrap  special error handling around the
+             call to main which is  convenient  for  writing  cgi
+             scripts  producing  html.  The  environment  may  be
+             obtained from the getenv procedure or  the  variable
+             *env*. Arguments are found in *args*.
+
+     -vXXXXX  The XXXXX Is passed along to the siod argument pro-
+             cessing,  however  if  the value is greater than 0 a
+             Content-type: text/plain header is generated immedi-
+             ately  (except  if  the number is represented with a
+             leading zero), which can be convenient for debugging
+             WWW cgi scripts. For example:
+
+             #!/usr/local/bin/siod -v0,-m2 (define (main)
+               (writes nil "Hello World0))
+
+             Which if invoked normally will result in
+
+             %hello.scm Hello World
+
+             And with the verbose flag over-ride on  the  command
+             line:
+
+
+             %hello.scm -v5 Content-type: text/plain
+
+             Welcome to SIOD, Scheme In One Defun,  Version  3.1x
+             12-JUN-95  (C)  Copyright 1988-1994 Paradigm Associ-
+             ates Inc.  10 heaps. size =  100000  cells,  2400000
+             bytes.  2048  inums.  GC  is  mark and sweep loading
+             hello.scm (define (main) (writes  nil  "Hello  World
+             ")) done.  Hello World EXIT
+
+
+RETURN VALUE
+     Errors during non-interactive usage mode result  in  a  non-
+
+
+
+SunOS 5.5              Last change: LOCAL                       2
+
+
+
+
+
+
+SIOD(1C)             Communication Commands              SIOD(1C)
+
+
+
+     zero exit status.
+
+
+ALTERNATIVE SYNTAX
+     Files which are loaded by the interpreter  may  contain  the
+     sequence  of  characters  parser:XXXXX  in  a comment in the
+     first line of the file.  This will result in  the  automatic
+     loading  of  the  file parser_XXXXX.scm which must provide a
+     procedure parser_XXXXX to return a  procedure  to  read  the
+     forms  from  the  file  to be loaded. Useful values of XXXXX
+     include read, pratt, and fasl.
+
+
+FILES
+     /usr/local/lib/siod/*          /usr/local/lib/siod/siod.html
+     /usr/local/lib/libsiod.so
+
+SEE ALSO
+     command csiod http://people.delphi.com/gjc/siod.html
+
+     Structure and Interpretation of Computer Programs , by Abel-
+     son and Sussman, MIT Press.
+
+
+DIAGNOSTICS
+     Error messages may also  set  the  variable  errobj  to  the
+     offending object.
+
+BUGS
+     With -g1 it does  not  GC  during  EVAL,  only  before  each
+     READ/EVAL/PRINT cycle.  It does GC during EVAL with -g0, but
+     that code may not run without modification on all  architec-
+     tures.
+
+VERSION
+     Current version  is  3.2,  12-MAR-96,  by  George  Carrette.
+     GJC@world.std.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SunOS 5.5              Last change: LOCAL                       3
+
+
+
