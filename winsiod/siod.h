@@ -8,6 +8,11 @@
 
 */
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+
 struct obj
 {short gc_mark;
  short type;
@@ -51,6 +56,8 @@ struct obj
 		signed char *data;} s_string;
 	struct {long dim;
 		struct obj **data;} lisp_array;
+        struct {long dim; void       **data;} cptr_array;
+        struct {void * pv ;                 } c_ptr ;
 	struct {FILE *f;
 		char *name;} c_file;}
  storage_as;};
@@ -68,6 +75,7 @@ struct obj
 #define SUBRM(x) (*((*x).storage_as.subrm.f))
 #define SUBRF(x) (*((*x).storage_as.subr.f))
 #define FLONM(x) ((*x).storage_as.flonum.data)
+#define CPTR(x)   ((*x).storage_as.c_ptr.pv)
 
 #define NIL ((struct obj *) 0)
 #define EQ(x,y) ((x) == (y))
@@ -102,6 +110,8 @@ struct obj
 #define tc_subr_4 19
 #define tc_subr_5 20
 #define tc_subr_2n 21
+#define tc_cptr         22
+#define tc_cptr_array   23
 #define FO_comment 35
 #define tc_user_min 50
 #define tc_user_max 100
@@ -117,10 +127,12 @@ typedef struct obj* LISP;
 typedef LISP (*SUBR_FUNC)(void); 
 
 #define CONSP(x)   TYPEP(x,tc_cons)
+#define CPTRP(x)    TYPEP(x, tc_cptr  )
 #define FLONUMP(x) TYPEP(x,tc_flonum)
 #define SYMBOLP(x) TYPEP(x,tc_symbol)
 
 #define NCONSP(x)   NTYPEP(x,tc_cons)
+#define NCPTRP(x)   NTYPEP(x, tc_cptr  )
 #define NFLONUMP(x) NTYPEP(x,tc_flonum)
 #define NSYMBOLP(x) NTYPEP(x,tc_symbol)
 
@@ -353,6 +365,11 @@ void __stdcall siod_init(int argc,char **argv);
 
 #if defined(WIN32) && defined(_WINDOWS_)
 LISP llast_win32_errmsg(DWORD);
+#endif
+
+#if defined(__cplusplus)
+//#pragma message ("compiling c plus plus")
+} // extern "C"
 #endif
 
 

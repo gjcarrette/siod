@@ -68,6 +68,7 @@ int main(int argc,char **argv)
  init_storage();
  init_subrs();
  init_trace();
+ init_slibu();
  init_siod_version();
  my_one = flocons((double) 1.0);
  my_two = flocons((double) 2.0);

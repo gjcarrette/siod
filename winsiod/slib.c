@@ -887,7 +887,7 @@ LISP gen_intern(char *name,long copyp)
    {hash = 0;
     n = obarray_dim;
     cname = name;
-    while((c = *cname++)) hash = ((hash * 17) ^ c) % n;
+    while((c = (0xFF & (*cname++)))) hash = ((hash * 17) ^ c) % n;
     sl = obarray[hash];}
  else
    sl = oblistvar;

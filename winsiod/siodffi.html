@@ -1,0 +1,941 @@
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./SiodFFI_files/filelist.xml">
+<title>Hostile Foreign-Function Interface in SIOD</title>
+<style>
+<!--
+ /* Font Definitions */
+@font-face
+	{font-family:"MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;
+	mso-font-alt:"\FF2D\FF33 \660E\671D";
+	mso-font-charset:128;
+	mso-generic-font-family:modern;
+	mso-font-pitch:fixed;
+	mso-font-signature:-1610612033 1757936891 16 0 131231 0;}
+@font-face
+	{font-family:Garamond;
+	panose-1:2 2 4 4 3 3 1 1 8 3;
+	mso-font-charset:0;
+	mso-generic-font-family:roman;
+	mso-font-pitch:variable;
+	mso-font-signature:647 0 0 0 159 0;}
+@font-face
+	{font-family:"\@MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;
+	mso-font-charset:128;
+	mso-generic-font-family:modern;
+	mso-font-pitch:fixed;
+	mso-font-signature:-1610612033 1757936891 16 0 131231 0;}
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-update:auto;
+	mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:11.0pt;
+	font-family:Garamond;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:"Courier New";}
+h1
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:16.0pt;
+	font-family:Arial;
+	mso-font-kerning:16.0pt;
+	font-weight:bold;}
+h2
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:2;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:14.0pt;
+	font-family:Arial;
+	font-weight:bold;
+	font-style:italic;}
+h3
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:3;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:13.0pt;
+	font-family:Arial;
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:11.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Times New Roman";}
+p
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:"Courier New";}
+pre
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:11.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Courier New";}
+tt
+	{mso-ascii-font-family:"Courier New";
+	mso-fareast-font-family:"Courier New";
+	mso-hansi-font-family:"Courier New";
+	mso-bidi-font-family:"Courier New";}
+p.CodeBlock, li.CodeBlock, div.CodeBlock
+	{mso-style-name:"Code Block";
+	mso-style-update:auto;
+	mso-style-parent:"Plain Text";
+	margin-top:0in;
+	margin-right:.5in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	background:#F3F3F3;
+	mso-layout-grid-align:none;
+	text-autospace:none;
+	font-size:9.0pt;
+	mso-bidi-font-size:11.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"MS Mincho";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+</head>
+
+<body lang=EN-US link=blue vlink=purple style='tab-interval:.5in'>
+<div class=Section1>
+
+<h1>Calling the C world from the Scheme World</h1>
+
+<p class=MsoNormal>A brief essay, with examples, by<span style='font-size:10.0pt;
+mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>Brian Beckman</p>
+
+<p class=MsoNormal>Updated 12 January 2000 (thanks to John D. Corbett for
+probing questions)<span style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>Original 19 August 1999<span style='font-size:10.0pt;
+mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal><a href="mailto:brianbec@hotmail.com">brianbec@hotmail.com</a><span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+<hr/>
+<h2>Introduction by George J Carrette</h2>
+
+What Brian Beckman has done here is more important than just a
+functional interface between Scheme and operating/application system
+platform C/C++ api programming.  The techniques he uses in the source
+file RealLoad.cpp include:
+<ul><li>assembly language in order to get at the underlying
+call frame mechanism</li>
+<li>and on-the-fly assembly and generation of machine code in order
+to compile trampolines/thunks that interface between compiled and
+interpreted code.</li>
+<li>reflection, the ability for programs to inspect and modify
+the previously compiled portions of the running system, dealing with
+types and procedures.</li>
+</ul>
+<p>
+Thus this work is worthy a example of what are essential aspects of
+the practical historic major lisp implementations. This lisp systems often
+started with an interpreter, sometimes written in assembly language
+(sometimes in Microcode), and then provided a machine-language assembler
+with the ability to convert lists of symbols into machine code
+that a POKE operation could then write into the running memory of
+the program.
+</p>
+In providing this code with the Siod 3.6 release on the CodePlex.Com
+web site I have taken certain liberties with the original authorize
+downloadable siodffi.zip source distribution. These include
+<ul><li>only including a subset of the functionality,
+excluding the work he did with DCOM and MIDI, for example</li>
+<li>Moving some of the changes he made to the base LIBSIOD.DLL 
+into the RealLoad.dll instead.</li>
+<li>leaving out his regression test material and possibly introducing
+new bugs, all of which would be my fault, not the original author's.
+</li>
+<li>Leaving out the DlgSIOD main program. This manages threading
+and windows api main program issues, windows event loop handling,
+and input and output from a window, in ways that wmsiod.c does not.
+</ul>
+
+<p>In the minimal testing I did with this code I found that the (test)
+function in windows.scm was able to create a window, but siod.exe seemed
+to be locked up after that. Also the code will not work when compiled
+in Debug mode. It only seems to work when in Release mode. When it is used
+in Debug mode you get an error inside the procedure MainDispatcher
+when calling the procedure pointer func() complaining about
+the value of <b>ESP</b> not being properly saved across a function call.
+This claims to be <b>Run-Time Check Failure #0</b> and is perhaps a new
+feature of Visual C++. The function MainDispatcherCDecls is the only
+other function that also has inline "__asm" and it will probably
+exhibit the same sort of behavior. There may be a documented
+way to disable this check or or to improve the assembly code
+so that the check does not fail. Perhaps this function needs
+to be entirely written in assembly code and moved
+to its own file so that it is not subject to debug issues.
+</p>
+<hr/>
+<h2>What are we trying to do?</h2>
+
+<p class=MsoNormal>We'd like to call programs written in C and C++ from
+programs written in Scheme. You thought I was going to say &quot;and <i>vice
+versa</i>&quot;, but that's not entirely true. Some C programs call other C
+programs through explicit <em>function pointers</em><em><span style='font-style:
+normal'>, or</span></em> <em>callbacks</em>. The only case in which we need C
+to call Scheme is the case of callbacks. In other words, we want to call C and
+C++ from Scheme and we want write our callbacks from C and C++ in Scheme. <span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>To be a bit more blunt about it, we want Scheme to be in
+charge, and we want C and C++ programs to be the unwitting slaves of Scheme. In
+other words, we'd like our Scheme to be able to call <em>any</em> C/++ code
+whether that code was ever intended to be called by some other programming
+system. And, we want our methods to scale to real-world C/++ programs. For
+example, we'd like to call kernel32.dll and oleaut32.dll from Scheme code. <span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>We can expand our ambitions to C++ vtables and to COM. If we
+can call C, we ought to be able to call through a vtable, which is just an
+array of (non-callback) function pointers. So, our class of unwitting slaves
+includes all of C++ and COM, including OLE Automation Servers, because all of
+these are based on vtables. From now on, then, I'll write “C&quot; and mean “C
+and C++ and COM and OLE Automation&quot; because we can handle all these cases
+in the same way. <span style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>We require <em>only</em> that the target C code be packaged
+in a DLL, or Dynamically Linked Library, and that the DLL <em>export</em> its
+entry points symbolically. DLLs are a very general standard for symbolic
+linking at runtime in the C-programming world on Microsoft platforms like
+Windows. Instead of using the operating system's symbolic linking loader, we'll
+just gin up our own inside an implementation of Scheme. This is how we're going
+to call C functions in DLLs. <span style='font-size:10.0pt;mso-bidi-font-size:
+11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>All that said, this is just a demonstration. We're not
+actually trying to make an industrial-strength, shippable Scheme product that
+can call C. Instead, we're trying to demonstrate solutions to the
+&quot;hard&quot; problems of callbacks and transformations among C types to
+Scheme types, and leave the problems of incorporating these solutions into a
+product-grade implementation to others. However, this is <em>not</em> mere
+theory: we show actual solutions to these problems in real, scalable code, and
+we call big, hairy DLLs like kernel32.dll and oleaut32.dll directly, with no
+glue code written in C, and we’ve stressed this by calling millions of
+iterations over the “hard” bits. <span style='font-size:10.0pt;mso-bidi-font-size:
+11.0pt'>&nbsp;</span></p>
+
+<h2>Why would you want to do that?</h2>
+
+<p class=MsoNormal>Up front, let me say that I'm not trying to advertise or
+proselytize or push my work in the slightest way.<span style="mso-spacerun:
+yes">  </span>I built it for my own reasons and just thought some other Scheme
+and Siod users might find it amusing if not useful.<span style="mso-spacerun:
+yes">  </span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>C is a wonderful language for writing libraries of
+special-purpose and high-performance components. It's a lousy language for algorithms,
+data structures, scripting, distributed command and control, experimentation,
+prototyping, learning by doing, and so on. That is, it’s so-so when you need
+lots of flexibility and elbow room or when you need to focus on the application
+domain. C forces you to do all your own pipe-fitting and resource management,
+as well as to invent data formats and write custom I/O code for your
+application data. </p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Scheme is great for flexibility and elbow room and for
+maximizing the impact of your precious programming hours by taking care of data
+formats, types, and resources for you. But Scheme is not so good for special-purpose,
+high-performance libraries. </p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>So, let's use C for what it's good for and Scheme for what
+it's good for. Let's also decide that we want to use all kinds of C libraries
+that might only have been intended to be called from other C programs. We want
+to be able to use libraries tomorrow we haven’t thought about today without
+having to drop everything and invent new, abstract wrappers for them. So we
+need to make our Scheme smart enough to fool C into thinking it's being called
+by C. This isn't as hard as it sounds. </p>
+
+<h2>C isn't Safe; how can you call it?</h2>
+
+<p class=MsoNormal>Everyone knows that Scheme is safer than C. Most
+memory-corruption bugs are simply impossible in Scheme, and they're quite easy
+in C. In fact, C is no safer than assembly language, and it's that way on
+purpose. C is meant for hardcore programming close to the machine. While it has
+nice abstraction features like static type-checking and object-oriented
+programming, it <em>always</em> gives you a way to break the rules when you
+need to do. If we're going to call arbitrary C code from Scheme, we need to
+deal with the fact that C code doesn't have anything like Scheme's notion of
+safety. </p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>We have to open holes in Scheme's safety nets, but we can
+close them all up on the Scheme side (even though we haven't done that
+completely in this demonstration package). This means that we can do all sorts
+of potentially unsafe things in some isolated bits of Scheme code, and we can
+stress, debug, test, and quarantine all the unsafe code on the other side of a
+well-defined fence. We'll show lots more on this below. <span style='font-size:
+10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<h2>What is the C World?</h2>
+
+<p class=MsoNormal>This is best shown by example. Consider the following C
+program: <span style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre>#include &lt;stdio.h&gt;</pre><pre>#include &lt;string.h&lt;</pre><pre>&nbsp;</pre><pre>__declspec (dllexport) int __stdcall<span style="mso-spacerun: yes">    </span></pre><pre>TestVictim0 () {</pre><pre><span style="mso-spacerun: yes">    </span>return 42 ;</pre><pre><span style="mso-spacerun: yes">    </span>}</pre><pre>__declspec (dllexport) char * __stdcall</pre><pre>TV4 (char * s) {</pre><pre><span style="mso-spacerun: yes">    </span>printf(&quot;Got this: \&quot;%s\&quot;\n&quot;, s) ;</pre><pre><span style="mso-spacerun: yes">    </span>return s ;</pre><pre><span style="mso-spacerun: yes">    </span>}</pre><pre>__declspec (dllexport) char * __cdecl</pre><pre>TV5cdecl (char * s, char * t) {</pre><pre><span style="mso-spacerun: yes">    </span>return strcat (s, t) ;</pre><pre><span style="mso-spacerun: yes">    </span>}</pre><pre>typedef int (*PFII) (int) ;</pre><pre>&nbsp;</pre><pre>__declspec (dllexport) int __stdcall</pre><pre>TVcallback (int i1, int i2, PFII f) {</pre><pre><span style="mso-spacerun: yes">    </span>int i = f ( i1 * i2 ) ;</pre><pre><span style="mso-spacerun: yes">    </span>return i ;</pre><pre><span style="mso-spacerun: yes">    </span>}</pre>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>That is source code for a little DLL that has four exports, <tt><span
+style='font-size:10.0pt;font-family:"Courier New"'>TestVictim0</span></tt>, <tt><span
+style='font-size:10.0pt;font-family:"Courier New"'>TV4</span></tt>, <tt><span
+style='font-size:10.0pt;font-family:"Courier New"'>TV5cdecl</span></tt>, and <tt><span
+style='font-size:10.0pt;font-family:"Courier New"'>TVcallback</span></tt>.
+Trust me, the methods we develop here work for very big DLLs, like kernel32.dll
+and oleaut32.dll, and we show it below. <span style='font-size:10.0pt;
+mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>This DLL is completely in the C world. There is nothing in
+here about Scheme-like types. These exports give and take machine-word
+integers; strings, as machine-level addresses; and functions as machine-level
+addresses. All C-like stuff. Also, some of the entry points are cdecls, i.e.,
+where caller pops arguments, and some of them are stdcalls, i.e., where callEE
+pops arguments. The former have the advantage of flexibility, that is, you can
+implement functions of variable arity, like printf, using cdecls. The latter
+have the advantage of brevity: call sites do not need to take up space with
+argument-popping instructions. <span style='font-size:10.0pt;mso-bidi-font-size:
+11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>If we can call cdecls and stdcalls with ints, strings, and
+function pointers, we will have a sizeable fraction of the C world covered.
+Further, we argue, we've got all the hard cases covered and the rest is
+straightforward. <span style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<h2 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'>What
+is the Scheme World?</h2>
+
+<p class=MsoNormal>By example, once again. What should calls to the entry
+points above look like? A very simple, but surprisingly useful assumption is that
+C functions return machine words, which, on 32-bit architectures, are DWORDS or
+unsigned longs. The C language permits a function to &quot;return a
+struct&quot;, that is, an aggregate much larger than 32 bits. But, this
+facility is not used very often in practice. Furthermore, compilers would be
+likely to implement the facility by putting the data somewhere and having the
+function return a pointer in a DWORD. <span style='font-size:10.0pt;mso-bidi-font-size:
+11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The upshot is that we may cover the vast majority of
+industrially important cases simply by assuming that C functions return DWORDs.
+This makes the Scheme &quot;superglue&quot; easier. The &quot;superglue&quot;
+is the generic C code we need to write as part of the Scheme implementation to
+extend it so it can call arbitrary C code. This is different from special-purpose
+&quot;glue&quot; that would extend Scheme so it could call a particular C
+function. If you haven't gathered it by now, we eschew any use of
+&quot;glue&quot; in favor of &quot;superglue&quot;. <span style='font-size:
+10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>All that said, here is a real trace of some calls from
+Scheme, through Superglue, to the DLL shown above. The first one is easy to
+understand--the function returns 42, which superglue turns from a C number into
+a Scheme number. The next two return addresses, interepreted as Scheme numbers.
+To get at the data inside, we need some superglue for converting from addresses
+in the C world into values in the Scheme world. The last one converts the
+Scheme closure into a C function (by dyanmically painting code bytes in
+memory), calls it, and returns the answer. <span style='font-size:10.0pt;
+mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre>(TestVictim0) --&gt; 42</pre><pre>(TV4 &quot;Hello World&quot;) --&gt; 0x7B6D80</pre><pre>(TV5cdecl &quot;yadda yadda, &quot; &quot;blah blah&quot;) --&gt; 0x7B6C00</pre><pre>(TVcallback 3 4 (lambda (x) (* 2 x))) --&gt; 24</pre>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>To look inside the pointers returned by TV4 and TV5cdecl, we
+use the Scheme Superglue function <span style='font-family:"Courier New"'>cstring-&gt;string</span>,
+which takes a Scheme number, which must have the value of a C pointer pointing
+to a C string, and conses up a fresh Scheme string. So, we get the following:<span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre>(cstring-&gt;string (TV4 &quot;Hello World&quot;)) --&gt; &quot;Hello World&quot;</pre><pre>(cstring-&gt;string (TV5cdecl &quot;yadda yadda, &quot; &quot;blah blah&quot;)) --&gt; &quot;yadda yadda, blah blah&quot;</pre>
+
+<h2>Multiary Callbacks: WndProcs</h2>
+
+<pre style='tab-stops:.5in'><span style='font-family:Garamond;mso-fareast-font-family:
+"Times New Roman";mso-bidi-font-family:"Times New Roman"'>Now, in Windows, a WndProc is a quaternary callback, that is, a &nbsp;</span></pre>
+
+<p class=MsoNormal>(lambda (hWnd msg wParam lParam) ...)</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre style='tab-stops:.5in'><span style='font-family:Garamond;mso-fareast-font-family:
+"Times New Roman"'>So, given multi-ary (or multiadic) callbacks, and given that we have a way to populate C structs (see structs.scm in the source below), then we should be able to write Windows applications entirely in Scheme, and we can; here’s “Hello, World!”:&nbsp;</span></pre><pre
+style='tab-stops:.5in'><span style='font-family:Garamond;mso-fareast-font-family:
+"Times New Roman"'>&nbsp;</span></pre>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>(require
+&quot;gdi32.scm&quot;)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>(require
+&quot;winuser.scm&quot;)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>(require 'fm.scm)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>(define (WndProc
+hWnd msg wParam lParam)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">  </span>(cond&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">   </span>((= msg WM_DESTROY) (PostQuitMessage 0))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">   </span>((= msg WM_PAINT)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">    </span>(let* ((ps<span style="mso-spacerun:
+yes">  </span>(new-PAINTSTRUCT))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">           </span>(hDC (BeginPaint hWnd ps)))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">      </span>(TextOutA hDC 10 10 (string-&gt;cstring
+&quot;Hello, World!&quot;) 13)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">      </span>(EndPaint hWnd ps) 0))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">   </span>(#t (DefWindowProcA hWnd msg wParam
+lParam))) )&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>(define
+(myCreateWindow)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">  </span>(let ((wc<span style="mso-spacerun:
+yes">      </span>(new-WNDCLASS))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">        </span>(clsNym<span style="mso-spacerun:
+yes">  </span>(string-&gt;cstring &quot;GenericAppClass&quot;))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">        </span>(appNym<span style="mso-spacerun:
+yes">  </span>(string-&gt;cstring &quot;Generic Application&quot;))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">        </span>(clsStyl (| CS_OWNDC (| CS_VREDRAW
+CS_HREDRAW)))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">        </span>(winStyl (| WS_OVERLAPPEDWINDOW (|
+WS_VISIBLE &nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">                   </span>(| WS_HSCROLL WS_VSCROLL))))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">        </span>(hInst<span style="mso-spacerun:
+yes">   </span>#x400000)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">        </span>(msg<span style="mso-spacerun:
+yes">     </span>(new-MSG)) )&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">    </span>(WNDCLASS::set-lpszClassName wc clsNym)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">    </span>(WNDCLASS::set-lpfnWndProc<span
+style="mso-spacerun: yes">   </span>wc (callback WndProc ))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">    </span>(WNDCLASS::set-style<span
+style="mso-spacerun: yes">         </span>wc clsStyl)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">    </span>(WNDCLASS::set-hInstance<span
+style="mso-spacerun: yes">     </span>wc hInst)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">    </span>(WNDCLASS::set-hbrBackground wc 6)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">    </span>(ChkHandleReturn (RegisterClassA wc))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">    </span>(ChkHandleReturn (CreateWindowExA 0 clsNym
+appNym winStyl&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">                                      </span>0 0
+CW_USEDEFAULT CW_USEDEFAULT &nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">                     </span><span
+style="mso-spacerun: yes">                 </span>0 0 hInst 0))&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">    </span>(while (GetMessageA msg 0 0 0)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">           </span>(TranslateMessage msg)&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'><span
+style="mso-spacerun: yes">           </span>(DispatchMessageA msg)) ))&nbsp;</span></p>
+
+<h3 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'>Hostile
+Foreign-Function Interface in SIOD</h3>
+
+<p class=MsoNormal>We wrote a Hostile FFI for George Carette’s wonderful,
+little SIOD program (<a href="http://alum.mit.edu/www/gjc/siod.html">http://alum.mit.edu/www/gjc/siod.html</a>).
+The FFI is hostile because the C code doesn’t need to cooperate. We can run
+kernel32, COM, Ole Automation, etc. Please feel free to download the 
+original <a
+href="http://www.angelfire.com/wa/brianbec/images/siodffi.zip">Visual
+Studio 6.0 Project</a>. Build it, run it (you may have to adjust the project
+directories in the Debug Tab of the Project\Settings dialog box; make sure the
+program starts in the siodffi\scripts\scheme directory), and type<span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre>(load &quot;regress.scm&quot;)</pre>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>This will run a bunch of tests on Superglue, calling
+kernel32, calling raw COM, consing up callbacks like the ones documented above,
+and calling OLE Automation. Type</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre>(load &quot;windows.scm&quot;)</pre>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>To see “Hello, World!” in action (wowee!!)</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>You can examine what’s going on and how we do it by just
+looking at the scheme code in “regress.scm” and backtracking through the
+Superglue code. Most of that code is in “Realload.cpp”, and there isn’t very
+much of it. Superglue consists entirely of the following new Scheme functions
+implemented in Realload.cpp and slib.cpp:<span style='font-size:10.0pt;
+mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;GetProcAlist&quot;, <span style="mso-spacerun: yes">     </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>GetProcAlist
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;GetProcAlistCDecls&quot;, <span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun:
+yes"> </span>GetProcAlistCDecls ) ;</span><span style='font-size:10.0pt;
+mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_2
+(&quot;MainDispatch&quot;, <span style="mso-spacerun: yes">     </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>MainDispatcher
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_2
+(&quot;MainDispatchCDecl&quot;, <span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span>MainDispatcherCDecls ) ;</span><span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;cstring-&gt;string&quot;, <span style="mso-spacerun: yes">  </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>StringFromCString
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;string-&gt;cstring&quot;, <span style="mso-spacerun: yes">  </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>CStringFromString
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;array-&gt;rgpv&quot;, <span style="mso-spacerun: yes">      </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>RgPvFromLispArray
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_2
+(&quot;rgpv-&gt;array&quot;, <span style="mso-spacerun: yes">      </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>LispArrayFromRgPv
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;array-&gt;cbytes&quot;, <span style="mso-spacerun: yes">    </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>CByteArrayFromArray
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;array-&gt;carray&quot;, <span style="mso-spacerun: yes">    </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>CByteArrayFromArray
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_2
+(&quot;cbytes-&gt;array&quot;, <span style="mso-spacerun: yes">    </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>ByteArrayFromCByteArray)
+;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_3
+(&quot;carray-&gt;array&quot;, <span style="mso-spacerun: yes">    </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>SiodArrayFromCByteArray)
+;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_0
+(&quot;ScmGetSystemDirectory&quot;, SiodGetSystemDirectory ) ;</span><span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_0
+(&quot;sgsd&quot;, <span style="mso-spacerun: yes">                 </span>SiodGetSystemDirectory
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_2
+(&quot;newVariant&quot;, <span style="mso-spacerun: yes">           </span>newVariant
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<pre><span style='mso-fareast-font-family:"Times New Roman"'><span style="mso-spacerun: yes">   </span><span style="mso-spacerun: yes"> </span>&nbsp;</span></pre><pre><span
+style='mso-fareast-font-family:"Times New Roman"'>init_subr_1 (&quot;num-&gt;lisp&quot;,<span style="mso-spacerun: yes">       </span><span style="mso-spacerun: yes">   </span><span style="mso-spacerun: yes">   </span>LispFromFlonum<span style="mso-spacerun: yes">    </span>) ;&nbsp;</span></pre>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;lisp-&gt;num&quot;, <span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span>FlonumFromLisp ) ;</span><span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;cptr-&gt;num&quot;, <span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span>FlonumFromCPtr ) ;</span><span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;num-&gt;cptr&quot;, <span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span>CPtrFromFlonum ) ;</span><span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;&amp;&quot;, <span style="mso-spacerun: yes">   </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span>CPtrAddressOfCPtr ) ;</span><span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_0
+(&quot;cptr&quot;, <span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>newcptr
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;val&quot;, <span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span>indirect ) ;</span><span style='font-size:
+10.0pt;mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;indirect&quot;, <span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span>indirect
+) ;</span><span style='font-size:10.0pt;mso-bidi-font-size:11.0pt;font-family:
+"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;peek-dw&quot;, <span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span>indirect ) ;</span><span style='font-size:
+10.0pt;mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_2
+(&quot;poke-dw&quot;, <span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span><span style="mso-spacerun: yes"> </span><span
+style="mso-spacerun: yes"> </span>pokeDw ) ;</span><span style='font-size:10.0pt;
+mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_1
+(&quot;peek-byte&quot;,<span style="mso-spacerun: yes">            </span><span
+style="mso-spacerun: yes"> </span>peekByte ) ;</span><span style='font-size:
+10.0pt;mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>init_subr_2
+(&quot;poke-byte&quot;,<span style="mso-spacerun: yes">            </span><span
+style="mso-spacerun: yes"> </span>pokeByte ) ;</span><span style='font-size:
+10.0pt;mso-bidi-font-size:11.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>All the rest of the fun stuff is written in Scheme. </p>
+
+<h2 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'>Alternatives</h2>
+
+<p class=MsoNormal>Ok, we have a pretty comprehensive solution to this, but
+there’s another partial one in the world, too. The Rice University PLT group
+has come up with a system for calling Active X controls from Scheme when those
+controls are scripted in an HTML window. References are below. <span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<h3 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'>DrScheme
+V100</h3>
+
+<p class=MsoNormal>This is very cool. It’s R4RS-compliant, and our gizmo is
+not. But, it only calls ActiveX controls in an HTML context, and we call
+arbitrary C/C++/COM DLLs. See <a
+href="http://www.cs.rice.edu/CS/PLT/packages/drscheme/">http://www.cs.rice.edu/CS/PLT/packages/drscheme/</a><span
+style='font-size:10.0pt;mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<h2>Why not write safe, high-level Scheme Wrappers?</h2>
+
+<p class=MsoNormal>Now, <span style="mso-spacerun: yes"> </span>I had four
+reasons to opt for designing a &quot;hardcore, unsafe&quot; Hostile FFI over a
+set of sane wrappers: laziness (typeI), laziness (typeII), coverage, and uniquess.
+To elaborate:&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>1. Laziness (typeI): the Windows API is enormous: at least
+5,000 APIs if one includes Multimedia, DirectX, OLE, (D)COM etc.; just
+enumerate the exports in *.dll in your Windows directory.<span
+style="mso-spacerun: yes">  </span>To cover even a small fraction of it with
+sane wrappers is a huge amount of work.<span style="mso-spacerun: yes"> 
+</span>I once did sane wrappers for GL on SGI machines, and that was weeks of
+spade work for a 700-item API that is vastly simpler and more repetitive than
+that of Windows.<span style="mso-spacerun: yes">  </span>I couldn't imagine
+actually trying to do it for Windows in the first place, let alone trying to
+keep up with the deluge of new DLLs hitting the fan continually.&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The lazy programmer's way out is to find a generic way to
+suck up any and all the APIs, and that's the way I took.<span
+style="mso-spacerun: yes">  </span>This approach, BTW, is not different in
+principle than the approch taken by Java FFI, Visual Basic's FFI, and a host of
+others. <span style="mso-spacerun: yes"> </span>I just don't use those language
+systems because I like scheme better (subjective rationale).&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>2. Laziness (typeII): It's hard enough to learn the minimum,
+required knowledge to write Windows programs. To learn this or that sane
+wrapper system *before* finding out whether it can actually do what you need is
+burdensome.<span style="mso-spacerun: yes">  </span>For example, I wanted to
+play with MIDI.<span style="mso-spacerun: yes">  </span>I was unable to find any
+way to hook into the Windows MIDI API amongst the current crop of free scheme
+implementations, e.g., DrScheme, VScheme, and SCM.<span style="mso-spacerun:
+yes">  </span>Those are all fabulous systems, but I had to devote some
+considerable time to learning them before realizing that I could not find out
+how to work MIDI with them. Note that this was not time spent on Scheme itself,
+but on the libraries and wrappers and interfaces and other accoutrements that
+come with each system. Now, I'm not an expert in those systems, and they *may*
+have MIDI capability, but I had only finite time to look and I couldn't find it
+within my time horizon.<span style="mso-spacerun: yes">  </span>I had to trade
+this off against how much time it would take me to write an FFI, and that
+turned out to be 3 days (because I already had my own PE loader and I already
+knew the insides of Siod). So this was another subjective point: it was easier
+*for me* to do it my way. &nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>3. Coverage: I sort of touched on this, but there is another
+point.<span style="mso-spacerun: yes">  </span>I do not know, today, what
+corners of Windows I will need tomorrow (so this topic might be called
+ignorance or blindness:). I would hate to have to derail my train-of-thought to
+go design yet-another-sane-wrapper before I can get back to playing with
+Windows. So, I trade &quot;sanity&quot; off against cognitive throughput: if I
+can find away to slay the *entire* dragon (and all future dragons, to boot)
+with one blow, then I don't ever have to think about it again.<span
+style="mso-spacerun: yes">  </span>I'll gladly take a little insanity and
+usafety in exchange. Subjective again. &nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>4. Uniqueness: There are lots of sane-wrapper solutions out
+there with their own pros and cons each.<span style="mso-spacerun: yes"> 
+</span>I really didn't want to add another. &nbsp;</p>
+
+<h2>Conclusion</h2>
+
+<p class=MsoNormal>Have fun! Email me at <a href="mailto:brianbec@hotmail.com">brianbec@hotmail.com</a>.
+I’ll be documenting this stuff as time allows. <span style='font-size:10.0pt;
+mso-bidi-font-size:11.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+</div>
+
+</body>
+
+</html>
