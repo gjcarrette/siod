@@ -541,6 +541,27 @@ LISP lreadsharp(struct gen_readio *f)
       return(NIL);
     case 't':
       return(flocons(1));
+    case 'x': case 'X':
+      {
+	int c, j;
+	char buf[33] ;
+	buf[0]='0' ;
+	buf[1]='x' ;
+
+	for (j = 2; j < 32; ++j)
+	  {
+	    c = GETC_FCN(f);
+	    if ((c == EOF) || (isspace(c)) || (strchr("()'`,;[]\"", c)))
+	      {
+		UNGETC_FCN (c, f) ;
+		buf[j]=0;
+		return (flocons (strtoul (buf, 0, 0)));
+	      }
+	    else
+	      buf[j] = c ;
+	  }
+	return (err("invalid hexnum", NIL));
+      }
     default:
       return(err("readsharp syntax not handled",NIL));}}
 

@@ -1623,9 +1623,9 @@ LISP load_so(LISP fname,LISP iname)
  if (!(handle = LoadLibraryEx(get_c_string(fname),
                               NULL,
                               LOAD_WITH_ALTERED_SEARCH_PATH)))
-   err("LoadLibrary",fname);
+   err("LoadLibrary",llast_win32_errmsg(0));
  if (!(fcn = (LPVOID)GetProcAddress(handle,get_c_string(init_name))))
-   err("GetProcAddress",init_name);
+   err("GetProcAddress",llast_win32_errmsg(0));
 #endif
  if (fcn)
    (*fcn)();

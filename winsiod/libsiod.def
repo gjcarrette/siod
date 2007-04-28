@@ -78,6 +78,7 @@ EXPORTS
     set_read_hooks
     apropos
     vload
+    nlength
     load
     require
     save_forms

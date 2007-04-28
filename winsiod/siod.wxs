@@ -9,7 +9,7 @@
  <Product Id="9EE692BF-6BAC-47FB-9D36-37DC4E997A0B" 
           Name="SIOD" 
           Language="1033" 
-          Version="3.6.0.0" 
+          Version="3.6.1.0" 
           Manufacturer="George J. Carrette">
   <Package Id="4ECAEE6C-DD8A-4364-A13D-32AAB4D78857"
            Description="SIOD, a Scheme Intepreter in one Day"
@@ -44,6 +44,7 @@
       <File Id="slibw32.dll" Name="slibw32.dll" LongName="slibw32.dll" DiskId="1" Source="$(var.bindir)slibw32.dll" />
       <File Id="ss.dll" Name="ss.dll" LongName="ss.dll" DiskId="1" Source="$(var.bindir)ss.dll" />
       <File Id="tar.dll" Name="tar.dll" LongName="tar.dll" DiskId="1" Source="$(var.bindir)tar.dll" />
+      <File Id="RealLoad.dll" Name="RealLoad.dll" LongName="RealLoad.dll" DiskId="1" Source="$(var.bindir)RealLoad.dll" />
       <File Id="wcsiod.exe" Name="wcsiod.exe" LongName="wcsiod.exe" DiskId="1" Source="$(var.bindir)wcsiod.exe" />
       <File Id="wmsiod.exe" Name="wmsiod.exe" LongName="wmsiod.exe" DiskId="1" Source="$(var.bindir)wmsiod.exe" />
 
@@ -75,6 +76,7 @@
       <File Id="siod.html" Name="siod.htm" LongName="siod.html" DiskId="1" Source="siod.html" />
       <File Id="siod_regex.html" Name="siod_rgx.htm" LongName="siod_regex.html" DiskId="1" Source="siod_regex.html" />
       <File Id="winsiod.html" Name="winsiod.htm" LongName="winsiod.html" DiskId="1" Source="winsiod.html" />
+      <File Id="siodffi.html" Name="siodffi.htm" LongName="siodffi.html" DiskId="1" Source="siodffi.html" />
      </Component>
      <Component Id="SIODcompiler" Guid="01ED0707-2DE0-4A08-83CF-21C7AB3C9784">
       <File Id="csiod.exe" Name="csiod.exe" LongName="csiod.exe" DiskId="1" Source="$(var.bindir)csiod.exe"/>
@@ -107,6 +109,15 @@
       <File Id="sql_oracle.scm" Name="sql_orcl.scm" LongName="sql_oracle.scm" DiskId="1" Source="sql_oracle.scm" />
       <File Id="sql_rdb.scm" Name="sql_rdb.scm" LongName="sql_rdb.scm" DiskId="1" Source="sql_rdb.scm" />
       <File Id="sql_sybase.scm" Name="sql_sybs.scm" LongName="sql_sybase.scm" DiskId="1" Source="sql_sybase.scm" />
+      <File Id="gdi32.scm" Name="gdi32.scm" LongName="gdi32.scm" DiskId="1" Source="gdi32.scm" />
+      <File Id="syslibs.scm" Name="syslibs.scm" LongName="syslibs.scm" DiskId="1" Source="syslibs.scm" />
+      <File Id="peloader.scm" Name="peloader.scm" LongName="peloader.scm" DiskId="1" Source="peloader.scm" />
+      <File Id="winuser.scm" Name="winuser.scm" LongName="winuser.scm" DiskId="1" Source="winuser.scm" />
+      <File Id="structs.scm" Name="structs.scm" LongName="structs.scm" DiskId="1" Source="structs.scm" />
+      <File Id="siod.scm" Name="siod.scm" LongName="siod.scm" DiskId="1" Source="siod.scm" />
+      <File Id="winbase.scm" Name="winbase.scm" LongName="winbase.scm" DiskId="1" Source="winbase.scm" />
+      <File Id="fm.scm" Name="fm.scm" LongName="fm.scm" DiskId="1" Source="fm.scm" />
+      <File Id="windows.scm" Name="windows.scm" LongName="windows.scm" DiskId="1" Source="windows.scm" />
      </Component>
      <Component Id="SIODcprogrammer" Guid="3EABF6D5-4D2A-4AD5-8FD7-265F5F5A45CD">
       <File Id="siod.h" Name="siod.h" LongName="siod.h" DiskId="1" Source="siod.h" />
@@ -172,6 +183,21 @@
       <File Id="wcsiod.vcproj" Name="wcsiod.vcp" LongName="wcsiod.vcproj" DiskId="1" Source="wcsiod.vcproj" />
       <File Id="wmsiod.c" Name="wmsiod.c" LongName="wmsiod.c" DiskId="1" Source="wmsiod.c" />
       <File Id="wmsiod.vcproj" Name="wmsiod.vcp" LongName="wmsiod.vcproj" DiskId="1" Source="wmsiod.vcproj" />
+
+
+<File Id="Ars.cpp" Name="Ars.cpp" LongName="Ars.cpp" DiskId="1" Source="Ars.cpp" />
+<File Id="Ars.h" Name="Ars.h" LongName="Ars.h" DiskId="1" Source="Ars.h" />
+<File Id="Ars_impl.h" Name="Ars_impl.h" LongName="Ars_impl.h" DiskId="1" Source="Ars_impl.h" />
+<File Id="BBLUtil.h" Name="BBLUtil.h" LongName="BBLUtil.h" DiskId="1" Source="BBLUtil.h" />
+<File Id="PEA.H" Name="PEA.H" LongName="PEA.H" DiskId="1" Source="PEA.H" />
+<File Id="PageData.h" Name="PageData.h" LongName="PageData.h" DiskId="1" Source="PageData.h" />
+<File Id="Pea.cpp" Name="Pea.cpp" LongName="Pea.cpp" DiskId="1" Source="Pea.cpp" />
+<File Id="RealLoad.cpp" Name="RealLoad.cpp" LongName="RealLoad.cpp" DiskId="1" Source="RealLoad.cpp" />
+<File Id="RealLoad.def" Name="RealLoad.def" LongName="RealLoad.def" DiskId="1" Source="RealLoad.def" />
+<File Id="RealLoad.vcproj" Name="RealLoad.vcp" LongName="RealLoad.vcproj" DiskId="1" Source="RealLoad.vcproj" />
+<File Id="Warning.h" Name="Warning.h" LongName="Warning.h" DiskId="1" Source="Warning.h" />
+
+
      </Component>
      <Directory Id="SIODBITMAPS" Name="Bitmaps">
       <Component Id="SIODBITMAPS1" Guid="1A2B0A75-DBCC-4242-B9A9-26BB2DB31E14">
@@ -219,6 +245,12 @@
               Description="SIOD Documentation windows specific" 
               Directory="SIODProgramsFolder" 
               Target="[SIODDIR]\winsiod.html" 
+              />
+    <Shortcut Id="SIODShortcut6" 
+              Name="siodffi.htm"  LongName="siodffi.html"
+              Description="SIOD Documentation Foreign Function Interface" 
+              Directory="SIODProgramsFolder" 
+              Target="[SIODDIR]\siodffi.html" 
               />
    <RemoveFolder Id="SIODProgramsFolder" On="uninstall"/>
    </Component>
