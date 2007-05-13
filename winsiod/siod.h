@@ -171,6 +171,7 @@ void __stdcall print_hs_2(void);
 long no_interrupt(long n);
 LISP get_eof_val(void);
 long repl_driver(long want_sigint,long want_init,struct repl_hooks *);
+void set_stdout_hooks(void (*puts_f)(char *));
 void set_repl_hooks(void (*puts_f)(char *),
 		    LISP (*read_f)(void),
 		    LISP (*eval_f)(LISP),

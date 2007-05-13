@@ -2013,7 +2013,7 @@ int __stdcall siod_main(int argc,char **argv, char **env)
 	 if ((strncmp(iargv[1],"-v",2) == 0) &&
 	     (atol(&iargv[1][2]) > 0) &&
 	     (iargv[1][2] != '0'))
-	   {printf("Content-type: text/plain\r\n\r\n");
+	   {put_st("Content-type: text/plain\r\n\r\n");
 	    text_plain_flag = 1;}
 	 if ((strncmp(iargv[1],"-m",2) == 0))
 	   mainflag = atol(&iargv[1][2]);
@@ -2050,7 +2050,7 @@ int __stdcall siod_main(int argc,char **argv, char **env)
 			? "(__cgi-main (*catch 'errobj (main))))"
 			: "(main)");}
  if (siod_verbose_check(2))
-   printf("EXIT\n");
+   put_st("EXIT\n");
 #ifdef VMS
  if (retval == 0) retval = 1;
 #endif

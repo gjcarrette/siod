@@ -85,7 +85,7 @@ static void init_slib_version(void)
 	NIL);}
 
 char * __stdcall siod_version(void)
-{return("3.6 5-APR-07");}
+{return("3.6.2 12-MAY-07");}
 
 long nheaps = 2;
 LISP *heaps;
@@ -123,6 +123,7 @@ void (*repl_puts)(char *) = NULL;
 LISP (*repl_read)(void) = NULL;
 LISP (*repl_eval)(LISP) = NULL;
 void (*repl_print)(LISP) = NULL;
+void (*stdout_puts)(char *) = NULL;
 LISP *inums;
 long inums_dim = 256;
 struct user_type_hooks *user_types = NULL;
@@ -169,6 +170,7 @@ void __stdcall process_cla(int argc,char **argv,int warnflag)
 {int k;
  char *ptr;
  static siod_lib_set = 0;
+ char msgbuff[256];
 #if !defined(vms)
  if (!siod_lib_set)
    {
@@ -186,7 +188,13 @@ void __stdcall process_cla(int argc,char **argv,int warnflag)
  for(k=1;k<argc;++k)
    {if (strlen(argv[k])<2) continue;
     if (argv[k][0] != '-')
-      {if (warnflag) printf("bad arg: %s\n",argv[k]);continue;}
+	{if (warnflag) 
+		{
+			sprintf_s(msgbuff,sizeof(msgbuff),"bad arg: %s\n",argv[k]);
+			put_st(msgbuff);
+	}
+		continue;
+	}
     switch(argv[k][1])
       {case 'l':
 	 siod_lib = &argv[k][2];
@@ -215,29 +223,55 @@ void __stdcall process_cla(int argc,char **argv,int warnflag)
 	 siod_verbose_level = atol(&(argv[k][2]));
 	 break;
        default:
-	 if (warnflag) printf("bad arg: %s\n",argv[k]);}}}
+	 if (warnflag)
+	   {
+	     sprintf_s(msgbuff,sizeof(msgbuff),"bad arg: %s\n",argv[k]);
+	     put_st(msgbuff);
+	   }
+      }
+   }
+}
 
 void __stdcall print_welcome(void)
-{if (siod_verbose_level >= 2)
-   {printf("Welcome to SIOD, Scheme In One Defun, Version %s\n",
-	   siod_version());
-    printf("(C) Copyright 1988-2007 George J. Carrette\n");}}
+{char msgbuff[256];
+ if (siod_verbose_level >= 2)
+   {
+     sprintf_s(msgbuff,sizeof(msgbuff),
+	       "Welcome to SIOD, Scheme In One Defun, Version %s\n",
+	       siod_version());
+     put_st(msgbuff);
+     put_st("(C) Copyright 1988-2007 George J. Carrette\n");
+   }
+}
 
 void __stdcall print_hs_1(void)
-{if (siod_verbose_level >= 2)
-   {printf("%ld heaps. size = %ld cells, %ld bytes. %ld inums. GC is %s\n",
-	   nheaps,
-	   heap_size,heap_size*sizeof(struct obj),
-	   inums_dim,
-	   (gc_kind_copying == 1) ? "stop and copy" : "mark and sweep");}}
+{char msgbuff[256];
+ if (siod_verbose_level >= 2)
+   {
+     sprintf_s(msgbuff,sizeof(msgbuff),
+	       "%ld heaps. size = %ld cells, %ld bytes. %ld inums. GC is %s\n",
+	       nheaps,
+	       heap_size,heap_size*sizeof(struct obj),
+	       inums_dim,
+	       (gc_kind_copying == 1) ? "stop and copy" : "mark and sweep");
+     put_st(msgbuff);
+   }
+}
 
 
 void __stdcall print_hs_2(void)
-{if (siod_verbose_level >= 2)
-   {if (gc_kind_copying == 1)
-      printf("heaps[0] at %p, heaps[1] at %p\n",heaps[0],heaps[1]);
-   else
-     printf("heaps[0] at %p\n",heaps[0]);}}
+{char msgbuff[256];
+ if (siod_verbose_level >= 2)
+   {
+     if (gc_kind_copying == 1)
+       sprintf_s(msgbuff,sizeof(msgbuff),
+		 "heaps[0] at %p, heaps[1] at %p\n",heaps[0],heaps[1]);
+     else
+       sprintf_s(msgbuff,sizeof(msgbuff),"heaps[0] at %p\n",heaps[0]);
+     put_st(msgbuff);
+   }
+}
+
 
 long no_interrupt(long n)
 {long x;
@@ -508,6 +542,11 @@ void set_repl_hooks(void (*puts_f)(char *),
  repl_eval = eval_f;
  repl_print = print_f;}
 
+void set_stdout_hooks(void (*puts_f)(char *))
+{
+  stdout_puts = puts_f;
+}
+
 void gput_st(struct gen_printio *f,char *st)
 {PUTS_FCN(st,f);}
 
@@ -522,7 +561,12 @@ int fputs_fcn(char *st,void *cb)
  return(1);}
 
 void put_st(char *st)
-{fput_st(stdout,st);}
+{
+  if (stdout_puts == NULL)
+    fput_st(stdout,st);
+  else
+    (*stdout_puts)(st);
+}
      
 void grepl_puts(char *st,void (*repl_puts)(char *))
 {if (repl_puts == NULL)
@@ -593,6 +637,7 @@ LISP err(const char *message, LISP x)
  long was_inside = inside_err;
  LISP retval,nx;
  const char *msg,*eobj;
+ char msgbuff[512];
  nointerrupt = 1;
  if ((!message) && CONSP(x) && TYPEP(CAR(x),tc_string))
    {msg = get_c_string(CAR(x));
@@ -605,12 +650,15 @@ LISP err(const char *message, LISP x)
  if ((eobj = try_get_c_string(nx)) && !memchr(eobj,0,80 ))
    eobj = NULL;
  if ((siod_verbose_level >= 1) && msg)
-   {if NULLP(nx)
-      printf("ERROR: %s\n",msg);
-    else if (eobj)
-      printf("ERROR: %s (errobj %s)\n",msg,eobj);
-    else
-      printf("ERROR: %s (see errobj)\n",msg);}
+   {
+     if NULLP(nx)
+       sprintf_s(msgbuff,sizeof(msgbuff),"ERROR: %s\n",msg);
+     else if (eobj)
+       sprintf_s(msgbuff,sizeof(msgbuff),"ERROR: %s (errobj %s)\n",msg,eobj);
+     else
+       sprintf_s(msgbuff,sizeof(msgbuff),"ERROR: %s (see errobj)\n",msg);
+     put_st(msgbuff);
+   }
  if (errjmp_ok == 1)
    {inside_err = 1;
     setvar(sym_errobj,nx,NIL);
@@ -627,7 +675,7 @@ LISP err(const char *message, LISP x)
     inside_err = 0;
     longjmp(errjmp,(msg) ? 1 : 2);}
  if (siod_verbose_level >= 1)
-   printf("FATAL ERROR DURING STARTUP OR CRITICAL CODE SECTION\n");
+   put_st("FATAL ERROR DURING STARTUP OR CRITICAL CODE SECTION\n");
  if (fatal_exit_hook)
    (*fatal_exit_hook)();
  else
@@ -1210,12 +1258,16 @@ void gc_stop_and_copy(void)
 LISP allocate_aheap(void)
 {long j,flag;
  LISP ptr,end,next;
+ char msgbuff[64];
  gc_kind_check();
  for(j=0;j<nheaps;++j)
    if (!heaps[j])
      {flag = no_interrupt(1);
       if (gc_status_flag && (siod_verbose_level >= 4))
-	printf("[allocating heap %ld]\n",j);
+	{
+	  sprintf_s(msgbuff,sizeof(msgbuff),"[allocating heap %ld]\n",j);
+	  put_st(msgbuff);
+	}
       heaps[j] = (LISP) must_malloc(sizeof(struct obj)*heap_size);
       ptr = heaps[j];
       end = heaps[j] + heap_size;
@@ -1280,15 +1332,22 @@ void gc_ms_stats_start(void)
 {gc_rt = myruntime();
  gc_cells_collected = 0;
  if (gc_status_flag && (siod_verbose_level >= 4))
-   printf("[starting GC]\n");}
+   put_st("[starting GC]\n");}
 
 void gc_ms_stats_end(void)
-{gc_rt = myruntime() - gc_rt;
+{char msgbuff[256];
+ gc_rt = myruntime() - gc_rt;
  gc_time_taken = gc_time_taken + gc_rt;
  if (gc_status_flag && (siod_verbose_level >= 4))
-   printf("[GC took %g cpu seconds, %ld cells collected]\n",
-	  gc_rt,
-	  gc_cells_collected);}
+   {
+     sprintf_s(msgbuff,sizeof(msgbuff),
+	       "[GC took %g cpu seconds, %ld cells collected]\n",
+	       gc_rt,
+	       gc_cells_collected);
+     put_st(msgbuff);
+   }
+}
+ 
 
 void gc_mark(LISP ptr)
 {struct user_type_hooks *p;
