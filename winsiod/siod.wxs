@@ -9,7 +9,7 @@
  <Product Id="9EE692BF-6BAC-47FB-9D36-37DC4E997A0B" 
           Name="SIOD" 
           Language="1033" 
-          Version="3.6.1.0" 
+          Version="3.6.2.0" 
           Manufacturer="George J. Carrette">
   <Package Id="4ECAEE6C-DD8A-4364-A13D-32AAB4D78857"
            Description="SIOD, a Scheme Intepreter in one Day"
@@ -57,6 +57,7 @@
       <File Id="proxy_server.exe" Name="proxysrv.exe" LongName="proxy-server.exe" DiskId="1" Source="$(var.bindir)proxy-server.exe" />
       <File Id="snapshot_compare.exe" Name="snapcmp.exe" LongName="snapshot-compare.exe" DiskId="1" Source="$(var.bindir)snapshot-compare.exe" />
       <File Id="snapshot_dir.exe" Name="snapdir.exe" LongName="snapshot-dir.exe" DiskId="1" Source="$(var.bindir)snapshot-dir.exe" />
+      <File Id="dlgsiod.exe" Name="dlgsiod.exe" LongName="dlgsiod.exe" DiskId="1" Source="$(var.bindir)dlgsiod.exe" />
 
 
      </Component>
@@ -197,6 +198,11 @@
 <File Id="RealLoad.vcproj" Name="RealLoad.vcp" LongName="RealLoad.vcproj" DiskId="1" Source="RealLoad.vcproj" />
 <File Id="Warning.h" Name="Warning.h" LongName="Warning.h" DiskId="1" Source="Warning.h" />
 
+<File Id="DlgSIOD.vcproj" Name="DlgSIOD.vcp" LongName="DlgSIOD.vcproj" DiskId="1" Source="DlgSIOD.vcproj" />
+<File Id="DlgSiod.cpp" Name="DlgSiod.cpp" LongName="DlgSiod.cpp" DiskId="1" Source="DlgSiod.cpp" />
+<File Id="DlgSiod.rc" Name="DlgSiod.rc" LongName="DlgSiod.rc" DiskId="1" Source="DlgSiod.rc" />
+<File Id="DlgSiodRC.h" Name="DlgSidRC.h" LongName="DlgSiodRC.h" DiskId="1" Source="DlgSiodRC.h" />
+<File Id="DlgUtil.h" Name="DlgUtil.h" LongName="DlgUtil.h" DiskId="1" Source="DlgUtil.h" />
 
      </Component>
      <Directory Id="SIODBITMAPS" Name="Bitmaps">
@@ -204,6 +210,10 @@
        <File Id="bannrbmp.bmp" Name="bannrbmp.bmp" LongName="bannrbmp.bmp" DiskId="1" Source="Bitmaps/bannrbmp.bmp" />
        <File Id="dlgbmp.bmp" Name="dlgbmp.bmp" LongName="dlgbmp.bmp" DiskId="1" Source="Bitmaps/dlgbmp.bmp" />
        <File Id="siod.ico" Name="siod.ico" LongName="siod.ico" DiskId="1" Source="Bitmaps/siod.ico" />
+
+       <File Id="nodrop.cur" Name="nodrop.cur" LongName="nodrop.cur" DiskId="1" Source="bitmaps/nodrop.cur" />
+       <File Id="arrow.cur" Name="arrow.cur" LongName="arrow.cur" DiskId="1" Source="bitmaps/arrow.cur" />
+
       </Component>
      </Directory>
     </Directory>
@@ -252,6 +262,11 @@
               Directory="SIODProgramsFolder" 
               Target="[SIODDIR]\siodffi.html" 
               />
+    <Shortcut Id="SIODShortcut7" Name="DlgSIOD" 
+              Description="Scheme in One Day (SIOD) Windows Dialog" 
+              Directory="SIODProgramsFolder" 
+              Target="[SIODDIR]\dlgsiod.exe" 
+              Icon="siodicon.exe" />
    <RemoveFolder Id="SIODProgramsFolder" On="uninstall"/>
    </Component>
   </DirectoryRef>

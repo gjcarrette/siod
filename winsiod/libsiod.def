@@ -159,6 +159,7 @@ EXPORTS
 	siod_shuffle_args
 	siod_init
 	llast_win32_errmsg
+    set_stdout_hooks
 
 
 
