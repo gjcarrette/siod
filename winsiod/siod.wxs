@@ -1,17 +1,20 @@
 <?xml version="1.0"?>
+<?ifndef bindir ?>
 <?define bindir = "release\"?>
+<?endif?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
 <!-- Good MSI practice would have each EXE/DLL in its own component,
      for proper patching behavior. But right now I want to get the job
      done with as little typing as possible. So the components are
      really being used as sets of files that can be installed.
  -->
- <Product Id="9EE692BF-6BAC-47FB-9D36-37DC4E997A0B" 
-          Name="SIOD" 
+ <Product Id="????????-????-????-????-????????????"
+          UpgradeCode="9f1540f1-a4d7-4dc6-8350-e8e2a8147026" 
+          Name="SIOD v3.6.3" 
           Language="1033" 
-          Version="3.6.2.0" 
+          Version="3.6.3.0" 
           Manufacturer="George J. Carrette">
-  <Package Id="4ECAEE6C-DD8A-4364-A13D-32AAB4D78857"
+  <Package Id="????????-????-????-????-????????????"
            Description="SIOD, a Scheme Intepreter in one Day"
            Comments="SIOD"
            Manufacturer="George J. Carrette" 

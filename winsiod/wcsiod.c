@@ -16,7 +16,7 @@ static char siod_lib_arg[128] = "-l";
 
 static char *siod_argv[7] = {
   "siod",
-  "-h100000:10",
+  "-h1000000:50",
   "-g0",
   "-o1000",
   "-s200000",
