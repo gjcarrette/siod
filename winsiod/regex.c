@@ -11,10 +11,14 @@
 #if defined(VMS)
 #include <types.h>
 #endif
-#if defined(sgi)
+#if defined(sgi) || defined(linux)
 #include <sys/types.h>
 #endif
+#if defined(linux)
+#include <regex.h>
+#else
 #include "regex.h"
+#endif
 #include "siod.h"
 
 static void init_regex_version(void)

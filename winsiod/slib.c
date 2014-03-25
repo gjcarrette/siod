@@ -79,6 +79,11 @@ gjc@world.std.com
 #include "siod.h"
 #include "siodp.h"
 
+#ifdef linux
+#define sprintf_s snprintf
+#endif
+
+
 static void init_slib_version(void)
 {setvar(cintern("*slib-version*"),
 	cintern("$Id: slib.c,v 1.16 1997/12/05 14:44:44 gjc Exp $"),

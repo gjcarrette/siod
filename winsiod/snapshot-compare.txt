@@ -1,66 +1,64 @@
-
-
-
-SNAPSHOT-COMPARE(1C) Communication Commands  SNAPSHOT-COMPARE(1C)
+SNAPSHOT-COMPARE(1C)                                      SNAPSHOT-COMPARE(1C)
 
 
 
 NAME
-     snapshot-compare - compare two snapshots of a directory tree
+       snapshot-compare - compare two snapshots of a directory tree
 
 SYNOPSIS
-     snapshot-compare   <snapshot-1>   <snapshot-2>    [:strip=N]
-     [:strip1=N] [:strip2=N]
+       snapshot-compare   <snapshot-1>   <snapshot-2>  [:strip=N]  [:strip1=N]
+       [:strip2=N]
 
 
 DESCRIPTION
-     snapshot-compare
+       snapshot-compare
 
-     will load the two  directory  snapshot  databases,  strip  a
-     number  of  slashes  from  the pathnames of the files in the
-     databases, then generate a report describing files which are
-     in one snapshot but not the other, and also what files which
-     have different MD5 checksums between snapshots.
+       will load the two directory  snapshot  databases,  strip  a  number  of
+       slashes from the pathnames of the files in the databases, then generate
+       a report describing files which are in one snapshot but not the  other,
+       and  also  what  files which have different MD5 checksums between snap‐
+       shots.
 
-     The following example shows that the file  foo.bar  is  con-
-     tained   exclusively   in  the  x.after  snapshot,  and  the
-     snapshot-compare.1 file is different between snapshots.
+       The following example shows that the file foo.bar is  contained  exclu‐
+       sively in the x.after snapshot, and the snapshot-compare.1 file is dif‐
+       ferent between snapshots.
 
-     bosa00>  ./snapshot-compare  x.before  x.after   ;   loading
-     x.before ; done 227 files ; loading x.after ; done 229 files
-     ;         x.after         /moby/src/kit/foo.bar         diff
-     /moby/src/kit/snapshot-compare.1
+       bosa00> ./snapshot-compare x.before x.after
+       ; loading x.before
+       ; done 227 files
+       ; loading x.after
+       ; done 229 files
+       ; x.after /moby/src/kit/foo.bar
+       diff /moby/src/kit/snapshot-compare.1
 
-     The effect of the strip parameter is  demonstrated  in  this
-     example:
+       The effect of the strip parameter is demonstrated in this example:
 
-     bosa00> ./snapshot-compare x.before x.after :strip=3 ; load-
-     ing  x.before  ; done 227 files ; loading x.after ; done 229
-     files ; strip 3 levels of / from x.before ; strip  3  levels
-     of  /  from x.after ; x.after kit/foo.bar diff kit/snapshot-
-     compare.1
+       bosa00> ./snapshot-compare x.before x.after :strip=3
+       ; loading x.before
+       ; done 227 files
+       ; loading x.after
+       ; done 229 files
+       ; strip 3 levels of / from x.before
+       ; strip 3 levels of / from x.after
+       ; x.after kit/foo.bar
+       diff kit/snapshot-compare.1
 
 
 EXIT STATUS
-     Errors result in a non-zero exit status.
+       Errors result in a non-zero exit status.
 
 
 AUTHOR
-     George Carrette. gjc@world.std.com
+       George Carrette. gjc@world.std.com
 
 
 SEE ALSO
-     siod snapshot-dir http://people.delphi.com/gjc/siod.html
+       siod snapshot-dir http://people.delphi.com/gjc/siod.html
 
 
 FILES
-     /usr/local/bin/snapshot-compare /usr/local/bin/siod
+       /usr/local/bin/snapshot-compare /usr/local/bin/siod
 
 
 
-
-
-SunOS 5.5              Last change: LOCAL                       1
-
-
-
+                                     LOCAL                SNAPSHOT-COMPARE(1C)

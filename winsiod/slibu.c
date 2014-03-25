@@ -685,7 +685,7 @@ LISP lalarm(LISP seconds,LISP flag)
 #endif
 
 
-#if defined(__osf__) || defined(SUN5)
+#if defined(__osf__) || defined(SUN5) || defined(linux)
 
 #define TV_FRAC(x) (((double)x.tv_usec) * 1.0e-6)
 
@@ -1021,7 +1021,7 @@ LISP l_fnmatch(LISP pat,LISP str,LISP flgs)
 
 #if defined(unix) || defined(WIN32)
 
-LISP lchmod(LISP path,LISP mode)
+LISP l_chmod(LISP path,LISP mode)
 {if (chmod(get_c_string(path),get_c_long(mode)))
    return(err("chmod",llast_c_errmsg(-1)));
  else
@@ -2177,7 +2177,7 @@ void __stdcall init_slibu(void)
 	      opendir_gc_free,
 	      &j);
  set_print_hooks(tc_opendir,opendir_prin1);
- init_subr_2("chmod",lchmod);
+ init_subr_2("chmod",l_chmod);
 #endif
 
  gc_protect_sym(&sym_channels,"*channels*");
@@ -2245,7 +2245,7 @@ void __stdcall init_slibu(void)
 #if defined(__osf__) || defined(sun)
  init_subr_2("cpu-usage-limits",cpu_usage_limits);
 #endif
-#if defined(__osf__) || defined(SUN5)
+#if defined(__osf__) || defined(SUN5) || defined(linux)
  init_subr_1("current-resource-usage",current_resource_usage);
 #endif
 #if  defined(unix) || defined(WIN32)
