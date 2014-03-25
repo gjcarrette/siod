@@ -3,6 +3,7 @@
 #
 # 25-MAR-2014: this file was hacked to work in the winsiod
 # folder you get from the source downloaded from http://siod.codeplex.com/
+# svn co https://siod.svn.codeplex.com/svn siod-src
 # It has been tested with "make linux" under Ubuntu 13.1
 # There are a large amount of warnings.
 
