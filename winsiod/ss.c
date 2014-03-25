@@ -589,7 +589,7 @@ void ss_prin1(LISP s,struct gen_printio *f)
 
 #ifndef WIN32
 
-LISP l_getname(int (*fcn)(struct sockaddr *,size_t *),char *msg,LISP s)
+LISP l_getname(int (*fcn)(int fn, struct sockaddr *,size_t *),char *msg,LISP s)
 {struct sock_stream *ss = get_ss(s,1);
  struct sockaddr_in a;
  size_t len;
