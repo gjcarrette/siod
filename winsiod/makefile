@@ -514,7 +514,7 @@ csiod:	csiod.smd
                :o=csiod :i=$(BINDIR)/siod :p=read
 
 
-snapshot-dir: snapshot-dir.smd
+snapshot-dir: snapshot-dir.smd find-files.scm
 
 snapshot-compare: snapshot-compare.smd
 

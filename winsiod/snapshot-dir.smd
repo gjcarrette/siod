@@ -15,9 +15,10 @@
 (define (main)
   (let ((directories (or (get-positional-arguments)
 			 (error "no directory or file name specified")))
-	(snapshot-file (lkey-default (cdddr *args*) 'output)))
+	(snapshot-file (lkey-default (cdddr *args*) 'output))
+	(exclude (strbreakup (lkey-default (cdddr *args*) 'exclude "") ",")))
     (require 'find-files.scm)
-    (let ((info (get-filesystem-snapshots directories)))
+    (let ((info (get-filesystem-snapshots directories exclude)))
       (cond (snapshot-file
 	     (save-forms snapshot-file info))
 	    ('else
