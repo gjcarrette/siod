@@ -19,6 +19,7 @@
         (result nil)
 	(f nil))
     (cond ((and (pair? s) (string? (car s)))
+	   ;; error message.
 	   (print (cons dir s))
 	   nil)
 	  ('else
@@ -27,19 +28,21 @@
 	   (closedir s)
 	   (nreverse result)))))
 
-(define (find-files start)
+(define (find-files start exclude)
   (let ((l (list-files start))
 	(result nil)
 	(f nil)
 	(s nil))
     (while l
-      (if (not (equal? (car l) ".."))
+      (if (and (not (equal? (car l) ".."))
+	       (not (member (car l) exclude)))
 	  (begin (set! f (string-append start "/" (car l)))
 		 (set! s (file-status f))
 		 (set! result (cons (cons f s) result))
 		 (if (and (memq 'DIR (assq 'mode s))
 			  (not (equal? (car l) ".")))
-		     (set! result (nconc (nreverse (find-files f)) result)))))
+		     (set! result (nconc (nreverse (find-files f exclude))
+					 result)))))
       (set! l (cdr l)))
     (nreverse result)))
 
@@ -67,16 +70,16 @@
 	     (and f (fclose f))))))
   l)
 
-(define (get-directory-snapshot dir)
+(define (get-directory-snapshot dir exclude)
   (mapcar get-file-info
-	  (find-files dir)))
+	  (find-files dir exclude)))
 
 (define (snapshot save-file dir)
   (save-forms save-file (get-directory-snapshot dir)))
     
     
 
-(define (get-filesystem-snapshots directories)
+(define (get-filesystem-snapshots directories exclude)
   (let ((result nil)
 	(l directories)
 	(s nil))
@@ -84,7 +87,8 @@
       (set! s (file-status (car l)))
       (cond ((not s))
 	    ((memq 'DIR (assq 'mode s))
-	     (set! result (nconc result (get-directory-snapshot (car l)))))
+	     (set! result (nconc result (get-directory-snapshot (car l)
+								exclude))))
 	    ('else
 	     (set! result (nconc result
 				 (list (get-file-info (cons (car l) s)))))))
