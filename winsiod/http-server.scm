@@ -3,6 +3,8 @@
 
 ;; single-threaded http server for diagnostic purposes.
 
+(require-so (so-ext 'ss))
+
 (define (main)
   (http-server (string->number (or (larg-default (cdddr *args*) 0)
 				   "9000"))))

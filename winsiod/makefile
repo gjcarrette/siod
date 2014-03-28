@@ -33,6 +33,7 @@ LIBSIODDIR=$(LIBDIR)/siod
 CP_F=cp -f
 # -Wmissing-prototypes
 GCCW=-Wall -Wstrict-prototypes
+GCCO=-O2
 #
 SAMPLE_OBJS = sample.o slib.o sliba.o trace.o
 SIOD_OBJS_COMMON = slib.o sliba.o trace.o slibu.o md5.o
@@ -73,7 +74,7 @@ osf1:
 	PROGS="siod sample\
               ndbm.so tar.so parser_pratt.so ss.so regex.so\
               acct.so statfs.so" \
-	CFLAGS="$(CDEBUG) -readonly_strings -O2 $(SLD)" \
+	CFLAGS="$(CDEBUG) -readonly_strings $(GCCO) $(SLD)" \
 	LD_EXE_FLAGS="-call_shared" \
 	LD_EXE_LIBS="-lm -lc" \
 	LD_LIB_FLAGS="-shared" \
@@ -148,7 +149,7 @@ solaris:
 	PROGS="siod ndbm.so tar.so parser_pratt.so ss.so regex.so" \
 	CC=gcc \
 	LD=ld \
-	CFLAGS="$(GCCW) $(CDEBUG) -DSUN5 -O2 $(SLD)" \
+	CFLAGS="$(GCCW) $(CDEBUG) -DSUN5 $(GCCO) $(SLD)" \
 	LD_EXE_FLAGS="-R $(LIBDIR) -R $(LIBSIODDIR)" \
 	LD_EXE_LIBS="-lm -lsocket -lnsl -lposix4 -dl" \
 	LD_LIB_FLAGS="-G" \
@@ -162,7 +163,7 @@ sybsolaris:
                sql_sybase.so gd.so sample" \
 	CC=gcc \
 	LD=gcc \
-	CFLAGS="$(GCCW) $(CDEBUG) -DSUN5 -O2 $(SLD)" \
+	CFLAGS="$(GCCW) $(CDEBUG) -DSUN5 $(GCCO) $(SLD)" \
 	LD_EXE_FLAGS="-Xlinker -R -Xlinker $(LIBDIR) -Xlinker -R -Xlinker $(LIBSIODDIR)" \
 	LD_EXE_LIBS="-lm -lsocket -lnsl -lposix4 -dl" \
 	LD_LIB_FLAGS="-G" \
@@ -183,7 +184,7 @@ sunos:
 	PROGS="siod tar.so parser_pratt.so ss.so" \
 	CC=gcc \
 	LD=gcc \
-	CFLAGS="$(GCCW) $(CDEBUG) -O2" \
+	CFLAGS="$(GCCW) $(CDEBUG) $(GCCO)" \
 	LD_EXE_FLAGS="" \
 	LD_EXE_LIBS="-lm -lsocket -lnsl -lposix4 -dl" \
 	LD_LIB_FLAGS="-G" \
@@ -194,8 +195,8 @@ sunos:
                  -lintl -lsocket -lnsl -lm" \
         build_driver
 
-# Tested by GJC on an intel pentium running Linux 2.0.32
-# under Redhat-5.0. Additional modules such as ndbm.c
+# Tested by GJC on Ubuntu 13.1
+# Additional modules such as ndbm.c
 # may work without modification in other environments.
 # uname = Linux
 
@@ -205,7 +206,7 @@ linux:
 	       regex.so acct.so" \
 	CC="gcc" \
 	LD="gcc" \
-	CFLAGS="$(GCCW) $(CDEBUG) -fPIC -O2 -D__USE_MISC -D__USE_GNU -D__USE_SVID -D__USE_XOPEN_EXTENDED -D__USE_XOPEN $(SLD)" \
+	CFLAGS="$(GCCW) $(CDEBUG) -fPIC $(GCCO) -D__USE_MISC -D__USE_GNU -D__USE_SVID -D__USE_XOPEN_EXTENDED -D__USE_XOPEN $(SLD)" \
 	LD_EXE_FLAGS="-rdynamic -Xlinker -rpath -Xlinker $(LIBDIR) -Xlinker -rpath -Xlinker $(LIBSIODDIR)" \
 	LD_EXE_LIBS="-ldl" \
 	LD_LIB_FLAGS="-shared" \
@@ -244,7 +245,7 @@ linux-ppc:
 	       regex.so acct.so md5.o" \
 	CC="gcc" \
 	LD="gcc" \
-	CFLAGS="$(GCCW) $(CDEBUG) -fPIC -fsigned-char -O2 -D__USE_MISC" \
+	CFLAGS="$(GCCW) $(CDEBUG) -fPIC -fsigned-char $(GCCO) -D__USE_MISC" \
 	LD_EXE_FLAGS="" \
 	LD_EXE_LIBS="-ldl -lcrypt" \
 	LD_LIB_FLAGS="-shared" \
@@ -261,7 +262,7 @@ sgi:
 	PROGS="siod \
               ndbm.so tar.so parser_pratt.so ss.so regex.so"\
         HS_REGEX_OBJS_NEEDED="$(HS_REGEX_OBJS)" \
-	CFLAGS="$(CDEBUG) -fullwarn -O2 -I. $(SLD)" \
+	CFLAGS="$(CDEBUG) -fullwarn $(GCCO) -I. $(SLD)" \
 	LD_EXE_FLAGS="-call_shared -rpath $(LIBDIR):$(LIBSIODDIR)" \
 	LD_EXE_LIBS="-lm -lc" \
 	LD_LIB_FLAGS="-shared" \
@@ -561,3 +562,7 @@ $(EXTRA_SRC_FILES):
 
 
 
+# tag for current work
+
+linux-work:
+	make linux GCCO=-O0 CDEBUG=-g "GCCW=-Wall -Wstrict-prototypes -Wno-parentheses" > make.out 2>&1

@@ -61,7 +61,7 @@
 #include <fcntl.h>
 #endif
 
-#if defined(linux) && defined(PPC)
+#if defined(linux)
 /* I know, this should be defined(NEED_CRYPT_H) */
 #include <crypt.h>
 #endif
@@ -290,11 +290,15 @@ LISP lsetpwfile(LISP fname)
 
 LISP lputpwent(LISP alist,LISP file)
 {int iflag = no_interrupt(1);
- int status;
+ int status,xerrno;
  struct passwd p;
  lencode_pwent(alist,&p);
  status = putpwent(&p,get_c_file(file,NULL));
+ xerrno = errno;
  no_interrupt(iflag);
+ if (status < 0) {
+   return(err("putpwent",llast_c_errmsg(xerrno)));
+ }
  return(NIL);}
 
 LISP laccess_problem(LISP lfname,LISP lacc)
@@ -1936,9 +1940,8 @@ LISP mkdatref(LISP ctype,LISP ind)
 		leval(cintern("sdatref"),NIL)));}
 
 LISP datlength(LISP dat,LISP ctype)
-{char *data;
- long size;
- data = get_c_string_dim(dat,&size);
+{long size;
+ get_c_string_dim(dat,&size);
  switch(get_c_long(ctype))
    {case CTYPE_FLOAT:
       return(flocons(size / sizeof(float)));
