@@ -601,7 +601,6 @@ LISP l_getname(int (*fcn)(int fn, struct sockaddr *,size_t *),char *msg,LISP s)
  p = ((unsigned char *)&a.sin_addr.s_addr);
  sprintf(buff,"%d.%d.%d.%d:%d",(int)p[0],(int)p[1],(int)p[2],(int)p[3],
 	 (int)ntohs(a.sin_port));
- printf("buff is %d long\n",strlen(buff));
  return(strcons(-1,buff));}
 
 LISP l_getsockname(LISP s)

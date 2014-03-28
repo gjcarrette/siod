@@ -110,7 +110,7 @@ void regex_prin1(LISP ptr,struct gen_printio *f)
  regex_t *p;
  p = get_tc_regex(ptr)->r;
  sprintf(buffer,"#<REGEX %p nsub=%d",
-	 p,p->re_nsub);
+	 p,(int)p->re_nsub);
  gput_st(f,buffer);
 #if defined(__osf__)
  sprintf(buffer,", len=%d flags=%X",
