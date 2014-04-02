@@ -1,4 +1,4 @@
-FTP-GET(1C)                                                        FTP-GET(1C)
+FTP-GET(1)                  General Commands Manual                 FTP-GET(1)
 
 
 
@@ -20,11 +20,11 @@ EXIT STATUS
 
 
 AUTHOR
-       gjc@world.std.com
+       George Carrette gjc@alum.mit.edu
 
 
 SEE ALSO
-       siod ftp-cp http://people.delphi.com/gjc/siod.html
+       siod ftp-cp http://alum.mit.edu/www/gjc/siod.html
 
 
 FILES
@@ -33,4 +33,4 @@ FILES
 
 
 
-                                     LOCAL                         FTP-GET(1C)
+                                                                    FTP-GET(1)

@@ -1,4 +1,4 @@
-FTP-CP(1C)                                                          FTP-CP(1C)
+FTP-CP(1)                   General Commands Manual                  FTP-CP(1)
 
 
 
@@ -33,7 +33,7 @@ EXIT STATUS
 
 
 AUTHOR
-       George Carrette, GJC@delphi.com
+       George Carrette, gjc@alum.mit.edu
 
 
 SEE ALSO
@@ -47,4 +47,4 @@ FILES
 
 
 
-                                     LOCAL                          FTP-CP(1C)
+                                                                     FTP-CP(1)

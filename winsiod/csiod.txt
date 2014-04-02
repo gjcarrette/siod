@@ -1,4 +1,4 @@
-CSIOD(1C)                                                            CSIOD(1C)
+CSIOD(1)                    General Commands Manual                   CSIOD(1)
 
 
 
@@ -6,25 +6,26 @@ NAME
        csiod - a compiler/linker for siod
 
 SYNOPSIS
-       csiod [:o=outfile] [:m=flag] [:v=flag] [:i=val] [:p=fasl] [:e=false]
+       csiod  [:o=outfile]  [:m=flag]  [:v=flag] [:i=val] [:p=fasl] [:e=false]
+       [:b=bootstrap.exe]
                 infile ...
 
 DESCRIPTION
-       csiod  Creates  the  outfile, default a.out, by loading all the expres‐
-       sions from the input files, and then saving the result in  fast-loading
-       format.  A  "#! interpreter-name" style header is written to the output
+       csiod Creates the outfile, default a.out, by loading  all  the  expres‐
+       sions  from the input files, and then saving the result in fast-loading
+       format. A "#! interpreter-name" style header is written to  the  output
        file using information from the optional flag arguments.
 
-       In non-unix environments, which lack the "#!"  convention,  alternative
-       techniques  are  used. Under WIN32 and VMS a bootstrap-exe file is uti‐
+       In  non-unix  environments, which lack the "#!" convention, alternative
+       techniques are used. Under WIN32 and VMS a bootstrap-exe file  is  uti‐
        lized.
 
 
    COMMAND LINE OPTIONS
-       :m=flag The flag defaults to  2,  causing  the  procedure  main  to  be
+       :m=flag The  flag  defaults  to  2,  causing  the  procedure main to be
                invoked. Use a value of 3 for cgi scripts.
 
-       :v=flag The  flag  defaults  to  "01"  causing errors to be reported. A
+       :v=flag The flag defaults to "01" causing  errors  to  be  reported.  A
                value of "0" supresses error messages, higher values cause more
                messages.  Use a value of "1" or "0" for cgi scripts.
 
@@ -32,28 +33,35 @@ DESCRIPTION
                csiod command itself, which is /usr/local/bin/siod by default.
 
        :p=parser
-               The parser can be fasl or read and controls the  output  format
-               of  the  data  of  the  compiler. The read format data is human
-               readable, the fasl format data is binary  and  in  cases  where
-               there  are many references to the same symbol name is more com‐
+               The  parser  can be fasl or read and controls the output format
+               of the data of the compiler. The  read  format  data  is  human
+               readable,  the  fasl  format  data is binary and in cases where
+               there are many references to the same symbol name is more  com‐
                pact and faster to load.
 
 
-       :BI :e=evalflag
-               The .I evalflag defaults to false, if true then each file being
-               compiled  is  loaded  with  regular evaluation semantics first,
-               then loaded again to obtain forms  for  compilation.  Currently
-               this  sort  of  thing matters only for uses of #.read-time-eval
-               but would be important if  the  compiler  was  extended  to  do
+       :e=evalflag
+               The  evalflag  defaults  to false, if true then each file being
+               compiled is loaded with  regular  evaluation  semantics  first,
+               then  loaded  again  to obtain forms for compilation. Currently
+               this sort of thing matters only for  uses  of  #.read-time-eval
+               but  would  be  important  if  the  compiler was extended to do
                macroexpansions or other optimizations.
 
 
+       :b=bootstrap
+               The bootstrap is the name of an executable file,  the  contents
+               of  which  are used instead of the #!interpreter magic from the
+               :i=flag when the output filename ends in exe. This trick  tends
+               to work in all operating systems, including unix variations.
+
+
 SEE ALSO
-       the man pages for siod http://people.delphi.com/gjc/siod.html
+       the man pages for siod http://alum.mit.edu/www/gjc/siod.html
 
 AUTHOR
-       George Carrette, GJC@delphi.com
+       George Carrette, gjc@alum.mit.edu
 
 
 
-                                     LOCAL                           CSIOD(1C)
+                                                                      CSIOD(1)

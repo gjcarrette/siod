@@ -1,4 +1,4 @@
-SNAPSHOT-COMPARE(1C)                                      SNAPSHOT-COMPARE(1C)
+SNAPSHOT-COMPARE(1)         General Commands Manual        SNAPSHOT-COMPARE(1)
 
 
 
@@ -49,11 +49,11 @@ EXIT STATUS
 
 
 AUTHOR
-       George Carrette. gjc@world.std.com
+       George Carrette, gjc@alum.mit.edu
 
 
 SEE ALSO
-       siod snapshot-dir http://people.delphi.com/gjc/siod.html
+       siod snapshot-dir http://alum.mit.edu/www/gjc/siod.html
 
 
 FILES
@@ -61,4 +61,4 @@ FILES
 
 
 
-                                     LOCAL                SNAPSHOT-COMPARE(1C)
+                                                           SNAPSHOT-COMPARE(1)

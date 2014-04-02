@@ -1,4 +1,4 @@
-SIOD(1C)                                                              SIOD(1C)
+SIOD(1)                     General Commands Manual                    SIOD(1)
 
 
 
@@ -120,7 +120,7 @@ FILES
        siod.so
 
 SEE ALSO
-       command csiod http://people.delphi.com/gjc/siod.html
+       command csiod http://alum.mit.edu/www/gjc/siod.html
 
        Structure and Interpretation of Computer  Programs  ,  by  Abelson  and
        Sussman, MIT Press.
@@ -136,9 +136,8 @@ BUGS
        without modification on all architectures.
 
 VERSION
-       Current   version   is   3.2,   12-MAR-96,    by    George    Carrette.
-       GJC@world.std.com
+       Current version is 3.2, 12-MAR-96, by George Carrette. gjc@alum.mit.edu
 
 
 
-                                     LOCAL                            SIOD(1C)
+                                                                       SIOD(1)

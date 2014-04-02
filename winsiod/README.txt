@@ -7,7 +7,7 @@ the libsiod shared library linking to about 70kbytes of code on a
 VAX using the standard DEC compilers for VMS. Results on other processor
 architectures should scale accordingly.
 
-George Carrette, June 16, 1996. gjc@world.std.com
+George Carrette, June 16, 1996. gjc@alum.mit.edu
 
 The standard distribution contains unix manual pages in source
 and text (txt) formats. A number of command files are provided that
@@ -79,7 +79,6 @@ requires:	C compiler, your favorite commercial DB. Posix regular
                 expression library.    
 ports:		VMS, WINDOWS NT, UNIX, OS/2, MACINTOSH. LINUX. OSF/1. SGI.
                 WINDOWS 95. SOLARIS.
-author:		George Carrette <gjc@world.std.com>
-how to get:	http://people.delphi.com/gjc/siod.html has instructions.
-                Also ftp://ftp.std.com/pub/gjc.
+author:		George Carrette <gjc@alum.mit.edu>
+how to get:	http://alum.mit.edu/www/gjc/siod.html has instructions.
 updated:	1997/04/03

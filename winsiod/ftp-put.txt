@@ -1,4 +1,4 @@
-FTP-PUT(1C)                                                        FTP-PUT(1C)
+FTP-PUT(1)                  General Commands Manual                 FTP-PUT(1)
 
 
 
@@ -29,7 +29,7 @@ EXIT STATUS
 
 
 AUTHOR
-       gjc@world.std.com http://people.delphi.com/gjc/siod.html
+       George Carrette gjc@alum.mit.edu http://alum.mit.edu/www/gjc/siod.html
 
 
 SEE ALSO
@@ -49,4 +49,4 @@ BUGS
 
 
 
-                                     LOCAL                         FTP-PUT(1C)
+                                                                    FTP-PUT(1)

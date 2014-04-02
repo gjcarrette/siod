@@ -1,4 +1,4 @@
-HTTP-GET(1C)                                                      HTTP-GET(1C)
+HTTP-GET(1)                 General Commands Manual                HTTP-GET(1)
 
 
 
@@ -67,10 +67,10 @@ FILES
        http-get http-stress.scm
 
 SEE ALSO
-       siod http://people.delphi.com/gjc/siod.html
+       siod http://alum.mit.edu/www/gjc/siod.html
 
 
 
 
 
-                                     LOCAL                        HTTP-GET(1C)
+                                                                   HTTP-GET(1)

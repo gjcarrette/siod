@@ -1,4 +1,4 @@
-HTTP-STRESS(1C)                                                HTTP-STRESS(1C)
+HTTP-STRESS(1)              General Commands Manual             HTTP-STRESS(1)
 
 
 
@@ -44,13 +44,13 @@ FILES
        http-stress http-stress.scm
 
 IDENTIFICATION
-       author: George J. Carrette
+       author: George J. Carrette gjc@alum.mit.edu
 
 SEE ALSO
-       siod http://people.delphi.com/gjc/siod.html
+       siod http://alum.mit.edu/www/gjc/siod.html
 
 
 
 
 
-                                     LOCAL                     HTTP-STRESS(1C)
+                                                                HTTP-STRESS(1)

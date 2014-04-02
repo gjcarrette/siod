@@ -1,6 +1,6 @@
 /* Scheme In One Defun, but in C this time.
  
- *                      COPYRIGHT (c) 1988-2007 BY                          *
+ *                      COPYRIGHT (c) 1988-2014 BY                          *
  *                 GEORGE J. CARRETTE, CONCORD MASSACHUSETTS.               *
  *			   ALL RIGHTS RESERVED                              *
 
@@ -22,7 +22,7 @@ http://www.gnu.org/copyleft/lesser.html
 
 /*
 
-gjc@world.std.com
+gjc@alum.mit.edu
 
    Release 1.0: 24-APR-88
    Release 1.1: 25-APR-88, added: macros, predicates, load. With additions by

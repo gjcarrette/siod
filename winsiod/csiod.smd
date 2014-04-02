@@ -29,7 +29,9 @@
 (define *default-b-flag*
   (cond ((memq (os-classification) '(win32))
          "wcsiod.exe")
-		('else "siod.exe")))
+	((memq (os-classification) '(unix))
+	 "/siod.bootstrap.exe")
+	('else "siod.exe")))
 
 (define (main)
   (let ((input-files nil)
@@ -102,7 +104,7 @@
 
 
 (define (output-is-exe? x)
-  (and (memq (os-classification) '(win32 vms))
+  (and (memq (os-classification) '(win32 vms unix))
        (> (length x) 4)
        (equal? ".EXE" (string-upcase (substring x (- (length x) 4))))))
 
