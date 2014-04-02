@@ -568,7 +568,7 @@ void ss_prin1(LISP s,struct gen_printio *f)
  unsigned char *p;
  struct sock_stream *ss;
  struct sockaddr_in a;
- size_t len,j;
+ socklen_t len,j;
  ss = get_ss(s,0);
  if (s->storage_as.string.dim)
    {sprintf(buff,"#{SOCKET %d",ss->sd);
@@ -589,10 +589,10 @@ void ss_prin1(LISP s,struct gen_printio *f)
 
 #ifndef WIN32
 
-LISP l_getname(int (*fcn)(int fn, struct sockaddr *,size_t *),char *msg,LISP s)
+LISP l_getname(int (*fcn)(int fn, struct sockaddr *,socklen_t *),char *msg,LISP s)
 {struct sock_stream *ss = get_ss(s,1);
  struct sockaddr_in a;
- size_t len;
+ socklen_t len;
  char buff[512];
  unsigned char *p;
  len = sizeof(a);

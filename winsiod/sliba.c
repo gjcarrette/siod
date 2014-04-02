@@ -761,10 +761,20 @@ LISP assv(LISP x,LISP alist)
 void put_long(long i,FILE *f)
 {fwrite(&i,sizeof(long),1,f);}
 
+void must_fread(void *buffer, size_t elem_size, size_t elem_count, FILE *f)
+{
+  if (fread(buffer, elem_size, elem_count, f) != elem_count)
+    {
+      err("fread",llast_c_errmsg(-1));
+    }
+}
+
 long get_long(FILE *f)
-{long i;
- fread(&i,sizeof(long),1,f);
- return(i);}
+{
+  long i;
+  must_fread(&i,sizeof(long),1,f);
+  return(i);
+}
 
 long fast_print_table(LISP obj,LISP table)
 {FILE *f;
@@ -887,16 +897,16 @@ LISP fast_read(LISP table)
       return(l);
     case tc_flonum:
       tmp = newcell(tc_flonum);
-      fread(&tmp->storage_as.flonum.data,
-	    sizeof(tmp->storage_as.flonum.data),
-	    1,
-	    f);
+      must_fread(&tmp->storage_as.flonum.data,
+		 sizeof(tmp->storage_as.flonum.data),
+		 1,
+		 f);
       return(tmp);
     case tc_symbol:
       len = get_long(f);
       if (len >= TKBUFFERN)
 	err("symbol name too long",NIL);
-      fread(tkbuffer,len,1,f);
+      must_fread(tkbuffer,len,1,f);
       tkbuffer[len] = 0;
       return(rintern(tkbuffer));
     default:
@@ -949,7 +959,7 @@ LISP array_fast_read(int code,LISP table)
    {case tc_string:
       len = get_long(f);
       ptr = strcons(len,NULL);
-      fread(ptr->storage_as.string.data,len,1,f);
+      must_fread(ptr->storage_as.string.data,sizeof(char),len,f);
       ptr->storage_as.string.data[len] = 0;
       return(ptr);
     case tc_byte_array:
@@ -959,7 +969,7 @@ LISP array_fast_read(int code,LISP table)
       ptr->storage_as.string.dim = len;
       ptr->storage_as.string.data =
 	(char *) must_malloc(len);
-      fread(ptr->storage_as.string.data,len,1,f);
+      must_fread(ptr->storage_as.string.data,sizeof(char),len,f);
       no_interrupt(iflag);
       return(ptr);
     case tc_double_array:
@@ -969,7 +979,7 @@ LISP array_fast_read(int code,LISP table)
       ptr->storage_as.double_array.dim = len;
       ptr->storage_as.double_array.data =
 	(double *) must_malloc(len * sizeof(double));
-      fread(ptr->storage_as.double_array.data,sizeof(double),len,f);
+      must_fread(ptr->storage_as.double_array.data,sizeof(double),len,f);
       no_interrupt(iflag);
       return(ptr);
     case tc_long_array:
@@ -979,7 +989,7 @@ LISP array_fast_read(int code,LISP table)
       ptr->storage_as.long_array.dim = len;
       ptr->storage_as.long_array.data =
 	(long *) must_malloc(len * sizeof(long));
-      fread(ptr->storage_as.long_array.data,sizeof(long),len,f);
+      must_fread(ptr->storage_as.long_array.data,sizeof(long),len,f);
       no_interrupt(iflag);
       return(ptr);
     case tc_lisp_array:
@@ -1461,22 +1471,24 @@ LISP last(LISP l)
 LISP butlast(LISP l)
 {INTERRUPT_CHECK();
  STACK_CHECK(&l);
- if NULLP(l) err("list is empty",l);
- if CONSP(l)
-   if NULLP(CDR(l))
-     return(NIL);
-   else
-     return(cons(CAR(l),butlast(CDR(l))));
+ if (NULLP(l)) err("list is empty",l);
+ if (CONSP(l))
+   {
+     if (NULLP(CDR(l)))
+       return(NIL);
+     else
+       return(cons(CAR(l),butlast(CDR(l))));
+   }
  return(err("not a list",l));}
 
 LISP nconc(LISP a,LISP b)
-{if NULLP(a)
-   return(b);
+{if (NULLP(a))
+    return(b);
  setcdr(last(a),b);
  return(a);}
 
 LISP funcall1(LISP fcn,LISP a1)
-{switch TYPE(fcn)
+{switch (TYPE(fcn))
    {case tc_subr_1:
       STACK_CHECK(&fcn);
       INTERRUPT_CHECK();
@@ -1491,7 +1503,7 @@ LISP funcall1(LISP fcn,LISP a1)
       return(lapply(fcn,cons(a1,NIL)));}}
 
 LISP funcall2(LISP fcn,LISP a1,LISP a2)
-{switch TYPE(fcn)
+{switch (TYPE(fcn))
    {case tc_subr_2:
     case tc_subr_2n:
       STACK_CHECK(&fcn);
