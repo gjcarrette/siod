@@ -1,4 +1,4 @@
-PROXY-SERVER(1C)                                              PROXY-SERVER(1C)
+PROXY-SERVER(1)             General Commands Manual            PROXY-SERVER(1)
 
 
 
@@ -53,8 +53,8 @@ BUGS
 
 
 SEE ALSO
-       siod http://people.delphi.com/gjc/siod.html
+       siod http://alum.mit.edu/www/gjc/siod.html
 
 
 
-                                     LOCAL                    PROXY-SERVER(1C)
+                                                               PROXY-SERVER(1)

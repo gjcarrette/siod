@@ -451,11 +451,14 @@ install: $(DISTFILES)
 	-for X in $(PUBINCS) ; do \
 	 $(CP_F) $$X $(INCDIR) ;\
 	done
+	-strip -o siod.bootstrap.exe siod
+	-$(CP_F) siod.bootstrap.exe $(LIBSIODDIR)
 	@echo "Install done."
 
 clean:
 	-rm *.o *.so *.sl *~ $(MANPAGES:.man=.txt) so_locations \
             siod sample siod.tar siod.tgz siod.zip selfdoc.txt TAGS \
+            siod.bootstrap.exe \
 	$(CMDFILES)
 
 # make manpage txt files for distribution to people who do not have 
@@ -553,9 +556,9 @@ gccflags:
 # Instead of copying additional files to the winsiod folder
 # these rules pull these extra files in.
 EXTRA_SRC_FOLDER=../archive
-EXTRA_SRC_FILES=acct.c cp-build.smd fork-test.scm build_vms.com \
+EXTRA_SRC_FILES=cp-build.smd fork-test.scm build_vms.com \
                 setup_vms.com vms_opt_files.txt release.bat \
-                siod-dist.sh $(MANPAGES:=.man)
+                siod-dist.sh
 
 $(EXTRA_SRC_FILES):
 	cp -v $(EXTRA_SRC_FOLDER)/$@ $@

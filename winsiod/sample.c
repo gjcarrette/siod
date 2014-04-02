@@ -1,18 +1,14 @@
 /* Scheme In One Defun, but in C this time.
- 
- *                    COPYRIGHT (c) 1988-1994 BY                            *
- *        PARADIGM ASSOCIATES INCORPORATED, CAMBRIDGE, MASSACHUSETTS.       *
- *        See the source file SLIB.C for more information.                  *
+
+ *                      COPYRIGHT (c) 1988-2014 BY                          *
+ *                 GEORGE J. CARRETTE, CONCORD MASSACHUSETTS.               *
+ *			   ALL RIGHTS RESERVED                              *
 
 */
 
 /*
 
-gjc@world.std.com gjc@paradigm.com 
-
-Paradigm Associates Inc          Phone: 617-492-6079
-29 Putnam Ave, Suite 6
-Cambridge, MA 02138
+gjc@alum.mit.edu
 
 An example main-program call with some customized subrs.
 

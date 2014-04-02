@@ -1,4 +1,4 @@
-FTP-TEST(1C)                                                      FTP-TEST(1C)
+FTP-TEST(1)                 General Commands Manual                FTP-TEST(1)
 
 
 
@@ -20,11 +20,11 @@ EXIT STATUS
 
 
 AUTHOR
-       gjc@world.std.com
+       gjc@alum.mit.edu
 
 
 SEE ALSO
-       siod ftp-cp http://people.delphi.com/gjc/siod.html
+       siod ftp-cp http://alum.mit.edu/www/gjc/siod.html
 
 
 FILES
@@ -33,4 +33,4 @@ FILES
 
 
 
-                                     LOCAL                        FTP-TEST(1C)
+                                                                   FTP-TEST(1)
