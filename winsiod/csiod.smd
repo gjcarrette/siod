@@ -83,7 +83,7 @@
 	   (let ((f (fopen output-file (if (output-is-exe? output-file)
 	                                   "wb" "w"))))
          (if (output-is-exe? output-file)
-		     (write-exe-bootstrap f))
+		     (write-exe-bootstrap f b-flag))
 	     (writes f
 		     "#!" i-flag " "
 		     "-v" v-flag ","
