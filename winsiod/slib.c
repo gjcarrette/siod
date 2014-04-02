@@ -1484,8 +1484,17 @@ LISP user_gc(LISP args)
  flag = no_interrupt(1);
  errjmp_ok = 0;
  old_status_flag = gc_status_flag;
- if NNULLP(args)
-   if NULLP(car(args)) gc_status_flag = 0; else gc_status_flag = 1;
+ if (NNULLP(args))
+   {
+     if (NULLP(car(args)))
+       {
+	 gc_status_flag = 0;
+       }
+     else
+       {
+	 gc_status_flag = 1;
+       }
+   }
  gc_mark_and_sweep();
  gc_status_flag = old_status_flag;
  errjmp_ok = 1;
@@ -1505,28 +1514,36 @@ long freelist_length(void)
  return(n);}
  
 LISP gc_status(LISP args)
-{long n,m;
- if NNULLP(args) 
-   if NULLP(car(args)) gc_status_flag = 0; else gc_status_flag = 1;
- if (gc_kind_copying == 1)
-   {if (gc_status_flag)
-      put_st("garbage collection is on\n");
-   else
-     put_st("garbage collection is off\n");
-    sprintf(tkbuffer,"%ld allocated %ld free\n",
-	    (long)(heap - heap_org), (long)(heap_end - heap));
-    put_st(tkbuffer);}
- else
-   {if (gc_status_flag)
-      put_st("garbage collection verbose\n");
-    else
-      put_st("garbage collection silent\n");
-    {m = nactive_heaps();
+{
+  long n,m;
+  if (NNULLP(args))
+    {
+      if (NULLP(car(args))) gc_status_flag = 0; else gc_status_flag = 1;
+    }
+  if (gc_kind_copying == 1)
+    {
+      if (gc_status_flag)
+	put_st("garbage collection is on\n");
+      else
+	put_st("garbage collection is off\n");
+      sprintf(tkbuffer,"%ld allocated %ld free\n",
+	      (long)(heap - heap_org), (long)(heap_end - heap));
+      put_st(tkbuffer);
+    }
+  else
+   {
+     if (gc_status_flag)
+       put_st("garbage collection verbose\n");
+     else
+       put_st("garbage collection silent\n");
+     m = nactive_heaps();
      n = freelist_length();
      sprintf(tkbuffer,"%ld/%ld heaps, %ld allocated %ld free\n",
 	     m,nheaps,m*heap_size - n,n);
-     put_st(tkbuffer);}}
- return(NIL);}
+     put_st(tkbuffer);
+   }
+ return(NIL);
+}
 
 LISP gc_info(LISP arg)
 {switch(get_c_long(arg))
@@ -2122,11 +2139,14 @@ int flush_ws(struct gen_readio *f,char *eoferr)
 {int c,commentp;
  commentp = 0;
  while(1)
-   {c = GETC_FCN(f);
-    if (c == EOF) if (eoferr) err(eoferr,NIL); else return(c);
-    if (commentp) {if (c == '\n') commentp = 0;}
-    else if (c == ';') commentp = 1;
-    else if (!isspace(c)) return(c);}}
+   {
+     c = GETC_FCN(f);
+     if ((c == EOF)) {if (eoferr) err(eoferr,NIL); else return(c);}
+     if (commentp) {if (c == '\n') commentp = 0;}
+     else if (c == ';') commentp = 1;
+     else if (!isspace(c)) return(c);
+   }
+}
 
 LISP lreadf(FILE *f)
 {struct gen_readio s;

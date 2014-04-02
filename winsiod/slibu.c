@@ -16,6 +16,7 @@
 #include <signal.h>
 #include <math.h>
 #include <stdlib.h>
+#define __USE_XOPEN
 #include <time.h>
 #include <errno.h>
 #include <stdarg.h>

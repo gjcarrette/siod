@@ -565,4 +565,4 @@ $(EXTRA_SRC_FILES):
 # tag for current work
 
 linux-work:
-	make linux GCCO=-O0 CDEBUG=-g "GCCW=-Wall -Wstrict-prototypes -Wno-parentheses" > make.out 2>&1
+	make linux GCCO=-O2 CDEBUG=-g "GCCW=-Wall -Wstrict-prototypes" > make.out 2>&1
