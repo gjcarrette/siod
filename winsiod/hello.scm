@@ -8,6 +8,11 @@
 #
 #  csiod :o=hello hello.scm
 #
+# Or this should also work, producing a binary executable.
+#
+# csiod :o=hello.exe hello.scm
+# 
+#
 
 main() := 
 {writes(nil,"Hello Scheme World.\n");
