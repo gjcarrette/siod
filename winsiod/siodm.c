@@ -11,29 +11,34 @@
    overflow bashing another program.
 
  */
-  
+
 
 #include <stdio.h>
 #include <console.h>
 
 #include <MacHeaders>
 
-static int interrupt_key_down(void);
-void full_interrupt_poll(int *counter);
+static int interrupt_key_down (void);
+void full_interrupt_poll (int *counter);
 
-void full_interrupt_poll(int *counter)
-{SystemTask();
- if (interrupt_key_down())
-     putc('\n',stdout);
+void
+full_interrupt_poll (int *counter)
+{
+  SystemTask ();
+  if (interrupt_key_down ())
+    putc ('\n', stdout);
   /* 200 seems to be a good compromise here between
-     interrupt latency and cpu-bound performance */   
- *counter = 200;}
+     interrupt latency and cpu-bound performance */
+  *counter = 200;
+}
 
-static int interrupt_key_down(void)
-{EvQElPtr l;
- for(l = (EvQElPtr) EventQueue.qHead; l; l = (EvQElPtr) l->qLink)
-   if ((l->evtQWhat == keyDown) &&
-       ((char) l->evtQMessage == '.') &&
-       (l->evtQModifiers & cmdKey))
-     return(1);
- return(0);}
+static int
+interrupt_key_down (void)
+{
+  EvQElPtr l;
+  for (l = (EvQElPtr) EventQueue.qHead; l; l = (EvQElPtr) l->qLink)
+    if ((l->evtQWhat == keyDown) &&
+	((char) l->evtQMessage == '.') && (l->evtQModifiers & cmdKey))
+      return (1);
+  return (0);
+}
