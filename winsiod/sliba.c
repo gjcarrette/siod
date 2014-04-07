@@ -2282,6 +2282,9 @@ fast_save (LISP fname, LISP forms, LISP nohash, LISP comment, LISP fmode)
   sprintf (msgbuff, "# sizeof(long) = %ld\n# sizeof(double) = %ld\n",
 	   (long) sizeof (long), (long) sizeof (double));
   fput_st (f, msgbuff);
+  sprintf (msgbuff, "# sizeof(struct obj) = %ld\n# sizeof(LISP) = %ld\n",
+	   (long) sizeof (struct obj), (long) sizeof (LISP));
+  fput_st (f, msgbuff);
   shexstr (databuff, &l_one, sizeof (l_one));
   sprintf (msgbuff, "# 1 = %s\n", databuff);
   fput_st (f, msgbuff);
