@@ -8,12 +8,16 @@
 #include "siod.h"
 
 struct a_cs_retcode
-{CS_RETCODE n;
- char *name;};
+{
+  CS_RETCODE n;
+  char *name;
+};
 
 struct a_cs_int
-{CS_INT n;
- char *name;};
+{
+  CS_INT n;
+  char *name;
+};
 
 static struct a_cs_retcode retcodes[] = {
   {CS_SUCCEED, "CS_SUCCEED"},
@@ -54,7 +58,8 @@ static struct a_cs_retcode retcodes[] = {
   {CS_TRUNCATED, "CS_TRUNCATED"},
   {CS_ESTYLE, "CS_ESTYLE"},
   {CS_EBADXLT, "CS_EBADXLT"},
-  {CS_ENOXLT, "CS_ENOXLT"}};
+  {CS_ENOXLT, "CS_ENOXLT"}
+};
 
 static struct a_cs_int cmds[] = {
   {CS_LANG_CMD, "CS_LANG_CMD"},
@@ -62,7 +67,8 @@ static struct a_cs_int cmds[] = {
   {CS_MSG_CMD, "CS_MSG_CMD"},
   {CS_SEND_DATA_CMD, "CS_SEND_DATA_CMD"},
   {CS_PACKAGE_CMD, "CS_PACKAGE_CMD"},
-  {CS_SEND_BULK_CMD, "CS_SEND_BULK_CMD"}};
+  {CS_SEND_BULK_CMD, "CS_SEND_BULK_CMD"}
+};
 
 static struct a_cs_int types[] = {
   {CS_ILLEGAL_TYPE, "CS_ILLEGAL_TYPE"},
@@ -88,30 +94,40 @@ static struct a_cs_int types[] = {
   {CS_VARBINARY_TYPE, "CS_VARBINARY_TYPE"},
   {CS_LONG_TYPE, "CS_LONG_TYPE"},
   {CS_SENSITIVITY_TYPE, "CS_SENSITIVITY_TYPE"},
-  {CS_BOUNDARY_TYPE, "CS_BOUNDARY_TYPE"}};
+  {CS_BOUNDARY_TYPE, "CS_BOUNDARY_TYPE"}
+};
 
-char *sybase_retstr(CS_RETCODE n)
-{long j,m;
- m = sizeof(retcodes) / sizeof(struct a_cs_retcode);
- for(j=0;j<m;++j)
-   if (n == retcodes[j].n)
-     return(retcodes[j].name);
- return(NULL);}
+char *
+sybase_retstr (CS_RETCODE n)
+{
+  long j, m;
+  m = sizeof (retcodes) / sizeof (struct a_cs_retcode);
+  for (j = 0; j < m; ++j)
+    if (n == retcodes[j].n)
+      return (retcodes[j].name);
+  return (NULL);
+}
 
-char *sybase_typestr(CS_INT n)
-{long j,m;
- m = sizeof(types) / sizeof(struct a_cs_int);
- for(j=0;j<m;++j)
-   if (n == types[j].n)
-     return(types[j].name);
- return(NULL);}
+char *
+sybase_typestr (CS_INT n)
+{
+  long j, m;
+  m = sizeof (types) / sizeof (struct a_cs_int);
+  for (j = 0; j < m; ++j)
+    if (n == types[j].n)
+      return (types[j].name);
+  return (NULL);
+}
 
 
-void init_sql_sybasec(void)
-{long j,n;
- n = sizeof(retcodes) / sizeof(struct a_cs_retcode);
- for(j=0;j<n;++j)
-   setvar(cintern(retcodes[j].name),flocons(retcodes[j].n),NIL);
- n = sizeof(cmds) / sizeof(struct a_cs_int);
- for(j=0;j<n;++j)
-   setvar(cintern(cmds[j].name),flocons(cmds[j].n),NIL);}
+void
+init_sql_sybasec (void)
+{
+  long j, n;
+  n = sizeof (retcodes) / sizeof (struct a_cs_retcode);
+  for (j = 0; j < n; ++j)
+    setvar (cintern (retcodes[j].name), flocons (retcodes[j].n), NIL);
+  n = sizeof (cmds) / sizeof (struct a_cs_int);
+  for (j = 0; j < n; ++j)
+    setvar (cintern (cmds[j].name), flocons (cmds[j].n), NIL);
+}

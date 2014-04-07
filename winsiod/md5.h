@@ -1,5 +1,5 @@
 /* MD5.H - header file for MD5C.C
- $Id: md5.h,v 1.1 1996/10/17 18:40:18 gjc Exp $
+ $Id$
  */
 
 /* Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All

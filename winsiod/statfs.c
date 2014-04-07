@@ -1,6 +1,6 @@
 /*-*-mode:c-*-*/
 
-/* $Id: statfs.c,v 1.1 1996/10/17 18:40:18 gjc Exp $ */
+/* $Id$ */
 
 #include <stdio.h>
 #include <sys/mount.h>

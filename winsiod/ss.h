@@ -1,14 +1,16 @@
-/* $Id: ss.h,v 1.1 1996/10/17 18:40:18 gjc Exp $ */
+/* $Id$ */
 
-struct sock_stream {
+struct sock_stream
+{
   int sd;
   int icnt;
-  unsigned char	*iptr;
+  unsigned char *iptr;
   unsigned char *ibase;
   int ocnt;
-  unsigned char	*optr;
+  unsigned char *optr;
   unsigned char *obase;
-  int bufsiz;};
+  int bufsiz;
+};
 
 #define SS_GETC(p) (--(p)->icnt < 0 ? ss_filbuf(p) : (int) *(p)->iptr++)
 
@@ -17,10 +19,10 @@ struct sock_stream {
    (int)(*(p)->optr++ = (unsigned char)(c)))
 
 
-LISP s_open(LISP lhost,LISP lport,LISP aflag);
-LISP s_close(LISP s);
-int ss_filbuf(struct sock_stream *ss);
-int ss_flsbuf(int c,struct sock_stream *ss);
-struct sock_stream *get_ss(LISP s,long openchk);
-void ss_force(struct sock_stream *ss);
-LISP s_accept(LISP s,LISP tmo);
+LISP s_open (LISP lhost, LISP lport, LISP aflag);
+LISP s_close (LISP s);
+int ss_filbuf (struct sock_stream *ss);
+int ss_flsbuf (int c, struct sock_stream *ss);
+struct sock_stream *get_ss (LISP s, long openchk);
+void ss_force (struct sock_stream *ss);
+LISP s_accept (LISP s, LISP tmo);

@@ -3,7 +3,7 @@
    This is a SIOD main program with additional command-line processing
    functionality. See slib.c and siod.html for more information.
 
- $Id: siod.c,v 1.9 1997/12/01 15:22:50 gjc Exp $
+ $Id$
 
 */
 
@@ -18,33 +18,28 @@ static char *siod_argv[] = {
   "-g0",
   "-o1000",
   "-s200000",
-  "-n2048"};
+  "-n2048"
+};
 
-int main(int argc,char **argv
+int
+main (int argc, char **argv
 #if defined(unix) || defined(vms) || defined(WIN32)
-     ,char **env
+      , char **env
 #endif
-     )
-{int nargc = argc;
- char **nargv = argv; 
+  )
+{
+  int nargc = argc;
+  char **nargv = argv;
 #if defined(WIN32) || defined(vms) || defined(unix)
- if (nargc > 0)
-  siod_shuffle_args(&nargc,&nargv);
+  if (nargc > 0)
+    siod_shuffle_args (&nargc, &nargv);
 #endif
- process_cla(sizeof(siod_argv)/sizeof(char *),siod_argv,1);
- return(siod_main(nargc,nargv,
+  process_cla (sizeof (siod_argv) / sizeof (char *), siod_argv, 1);
+  return (siod_main (nargc, nargv,
 #if defined(unix) || defined(vms) || defined(WIN32)
-     env
+		     env
 #else
-	NULL
+		     NULL
 #endif
-	));}
-
-
-
-
-
-
-
-
-
+	  ));
+}
